@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <PackageId>Adens.DevToys.FileSpliter</PackageId>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <IsPackable>true</IsPackable>
+	  <Version>1.0.0</Version>
+	  <Title>FileSpliter</Title>
+	  <Description>File Splitter Utility</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageTags>devtoys-app</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevToys.Api" Version="2.0.2-preview"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FileSpliter.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FileSpliter.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="FileSpliter.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileSpliter.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
