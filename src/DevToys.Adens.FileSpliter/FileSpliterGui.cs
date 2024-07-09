@@ -9,7 +9,7 @@ namespace DevToys.Adens.FileSpliter;
 [Name("FileSpliter")]                                                         // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
-    IconGlyph = '\uE670',                                                     // An icon that represents a pizza
+    IconGlyph = '\uE511',                                                     // An icon that represents a pizza
     GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(FileSpliterResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName = "DevToys.Adens.FileSpliter.FileSpliter",                      // The full name (including namespace) of the resource file containing our localized texts

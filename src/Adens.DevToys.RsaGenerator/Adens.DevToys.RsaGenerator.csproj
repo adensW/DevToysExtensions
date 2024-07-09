@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageId>Adens.DevToys.RsaGenerator</PackageId>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>true</IsPackable>
+		<Version>1.0.1</Version>
+		<Title>RsaGenerator</Title>
+		<Description>Rsa Generator Utility</Description>
+		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+		<Authors>adensW</Authors>
+		<PackageTags>devtoys-app</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="RsaGenerator.Designer.cs">
+	    <DependentUpon>RsaGenerator.resx</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="RsaGenerator.resx">
+	    <LastGenOutput>RsaGenerator.Designer.cs</LastGenOutput>
+	    <Generator>ResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+
+</Project>
