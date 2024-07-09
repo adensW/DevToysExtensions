@@ -61,7 +61,8 @@ internal sealed class FileSpliterGui : IGuiTool
     //}
 
     private readonly IUISingleLineTextInput _outputFilePathIinput = SingleLineTextInput();
-    
+    private readonly IUIProgressRing _progressRing = ProgressRing();
+    private readonly IUILabel _resultLable = Label();
     public UIToolView View
     {
         get
@@ -94,7 +95,9 @@ internal sealed class FileSpliterGui : IGuiTool
                         .OnTextChanged(onOutputFilepathChanged),
                     Button()
                         .Text("Split")
-                        .OnClick(OnButtonClick)
+                        .OnClick(OnButtonClick),
+                    _progressRing.Hide(),
+                    _resultLable.Hide()
 
             ));
             return _view;
@@ -179,6 +182,10 @@ internal sealed class FileSpliterGui : IGuiTool
     }
     private async ValueTask OnButtonClick()
     {
+        try { 
+        _resultLable.Show();
+        _resultLable.Text("Splitting...");
+        _progressRing.Show();
         var st= _settingsProvider.GetSetting(splitType);
         switch (st)
         {
@@ -191,7 +198,13 @@ internal sealed class FileSpliterGui : IGuiTool
             default:
                 break;
         }
+        _progressRing.Hide();
+        _resultLable.Text("Splited");
+        }catch(IOException ex)
+        {
+            _resultLable.Text(ex.Message);
 
+        }
     }
 
     private async ValueTask onFilepathChanged(string arg)
