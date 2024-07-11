@@ -3,21 +3,21 @@ using System.ComponentModel.Composition;
 using System.Text;
 using static DevToys.Api.GUI;
 
-namespace DevToys.Adens.FileSpliter;
+namespace Adens.DevToys.FileSplitter;
 
 [Export(typeof(IGuiTool))]
-[Name("FileSpliter")]                                                         // A unique, internal name of the tool.
+[Name("FileSplitter")]                                                         // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
     IconGlyph = '\uE511',                                                     // An icon that represents a pizza
     GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
-    ResourceManagerAssemblyIdentifier = nameof(FileSpliterResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
-    ResourceManagerBaseName = "DevToys.Adens.FileSpliter.FileSpliter",                      // The full name (including namespace) of the resource file containing our localized texts
-    ShortDisplayTitleResourceName = nameof(FileSpliter.ShortDisplayTitle),    // The name of the resource to use for the short display title
-    LongDisplayTitleResourceName = nameof(FileSpliter.LongDisplayTitle),
-    DescriptionResourceName = nameof(FileSpliter.Description),
-    AccessibleNameResourceName = nameof(FileSpliter.AccessibleName))]
-internal sealed class FileSpliterGui : IGuiTool
+    ResourceManagerAssemblyIdentifier = nameof(FileSplitterResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
+    ResourceManagerBaseName = "Adens.DevToys.FileSplitter.FileSplitter",                      // The full name (including namespace) of the resource file containing our localized texts
+    ShortDisplayTitleResourceName = nameof(FileSplitter.ShortDisplayTitle),    // The name of the resource to use for the short display title
+    LongDisplayTitleResourceName = nameof(FileSplitter.LongDisplayTitle),
+    DescriptionResourceName = nameof(FileSplitter.Description),
+    AccessibleNameResourceName = nameof(FileSplitter.AccessibleName))]
+internal sealed class FileSplitterGui : IGuiTool
 {
     private enum SplitType
     {
@@ -28,22 +28,22 @@ internal sealed class FileSpliterGui : IGuiTool
     private readonly ISettingsProvider _settingsProvider;
     private static readonly SettingDefinition<string?> filePath
      = new(
-         name: $"{nameof(FileSpliterGui)}.{nameof(filePath)}",
+         name: $"{nameof(FileSplitterGui)}.{nameof(filePath)}",
          defaultValue: null);
     private static readonly SettingDefinition<string?> outputFilePath
     = new(
-        name: $"{nameof(FileSpliterGui)}.{nameof(outputFilePath)}",
+        name: $"{nameof(FileSplitterGui)}.{nameof(outputFilePath)}",
         defaultValue: null);
     private static readonly SettingDefinition<SplitType> splitType
     = new(
-        name: $"{nameof(FileSpliterGui)}.{nameof(splitType)}",
+        name: $"{nameof(FileSplitterGui)}.{nameof(splitType)}",
         defaultValue: SplitType.Size);
     private static readonly SettingDefinition<int> size
   = new(
-      name: $"{nameof(FileSpliterGui)}.{nameof(size)}",
+      name: $"{nameof(FileSplitterGui)}.{nameof(size)}",
       defaultValue: 1024);
     [ImportingConstructor]
-    public FileSpliterGui(ISettingsProvider settingsProvider)
+    public FileSplitterGui(ISettingsProvider settingsProvider)
     {
         _settingsProvider = settingsProvider;
         //_settingsProvider.SettingChanged += OnSettingChanged;
@@ -56,7 +56,7 @@ internal sealed class FileSpliterGui : IGuiTool
     //        string trueoutput = GetOutputFilePath((string)e.NewValue);
     //        _outputFilePathIinput.Text(trueoutput);
 
-    //        //_settingsProvider.SetSetting(FileSpliterGui.outputFilePath, trueoutput);
+    //        //_settingsProvider.SetSetting(FileSplitterGui.outputFilePath, trueoutput);
     //    }
     //}
 
@@ -120,7 +120,7 @@ internal sealed class FileSpliterGui : IGuiTool
     }
     private async ValueTask SplitBySize()
     {
-        var filepath = _settingsProvider.GetSetting(FileSpliterGui.filePath);
+        var filepath = _settingsProvider.GetSetting(FileSplitterGui.filePath);
         // Split file by size
         using (var reader = new FileStream(filepath, FileMode.Open))
         {
@@ -136,7 +136,7 @@ internal sealed class FileSpliterGui : IGuiTool
                 }
                 byte[] buffer = new byte[chunkSize];
                 reader.Read(buffer, 0, chunkSize);
-                var tureOutputPath = _settingsProvider.GetSetting(FileSpliterGui.outputFilePath).Replace("{0}", surfix.ToString());
+                var tureOutputPath = _settingsProvider.GetSetting(FileSplitterGui.outputFilePath).Replace("{0}", surfix.ToString());
                 // 保存到文件
                 using (FileStream fs = new FileStream(tureOutputPath, FileMode.Create))
                 {
@@ -150,7 +150,7 @@ internal sealed class FileSpliterGui : IGuiTool
     }
     private async ValueTask SplitByLine()
     {
-        var filepath = _settingsProvider.GetSetting(FileSpliterGui.filePath);
+        var filepath = _settingsProvider.GetSetting(FileSplitterGui.filePath);
         // split file by line
         using (var reader = new StreamReader(filepath))
         {
@@ -165,7 +165,7 @@ internal sealed class FileSpliterGui : IGuiTool
                 cur++;
                 if (cur >= max)
                 {
-                    var tureOutputPath = _settingsProvider.GetSetting(FileSpliterGui.outputFilePath).Replace("{0}", surfix.ToString());
+                    var tureOutputPath = _settingsProvider.GetSetting(FileSplitterGui.outputFilePath).Replace("{0}", surfix.ToString());
                     // 保存到文件
                     cur = 0;
                     using (FileStream fs = new FileStream(tureOutputPath, FileMode.Create))
@@ -209,7 +209,7 @@ internal sealed class FileSpliterGui : IGuiTool
 
     private async ValueTask onFilepathChanged(string arg)
     {
-        _settingsProvider.SetSetting(FileSpliterGui.filePath, arg);
+        _settingsProvider.SetSetting(FileSplitterGui.filePath, arg);
         string trueoutput = GetOutputFilePath(arg);
         _outputFilePathIinput.Text(trueoutput);
     }
@@ -229,7 +229,7 @@ internal sealed class FileSpliterGui : IGuiTool
     }
     private async ValueTask onOutputFilepathChanged(string arg)
     {
-        _settingsProvider.SetSetting(FileSpliterGui.outputFilePath, arg);
+        _settingsProvider.SetSetting(FileSplitterGui.outputFilePath, arg);
     }
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {

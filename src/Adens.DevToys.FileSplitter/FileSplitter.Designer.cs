@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevToys.Adens.FileSpliter {
+namespace Adens.DevToys.FileSplitter {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DevToys.Adens.FileSpliter {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class FileSpliter {
+    internal class FileSplitter {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal FileSpliter() {
+        internal FileSplitter() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DevToys.Adens.FileSpliter {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevToys.Adens.FileSpliter.FileSpliter", typeof(FileSpliter).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Adens.DevToys.FileSplitter.FileSplitter", typeof(FileSplitter).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 A File Spliter extension for DevToys 的本地化字符串。
+        ///   查找类似 A File Splitter extension for DevToys 的本地化字符串。
         /// </summary>
         internal static string AccessibleName {
             get {
@@ -79,7 +79,7 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 File Spliter 的本地化字符串。
+        ///   查找类似 File Splitter 的本地化字符串。
         /// </summary>
         internal static string LongDisplayTitle {
             get {
@@ -88,7 +88,7 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 File Spliter 的本地化字符串。
+        ///   查找类似 File Splitter 的本地化字符串。
         /// </summary>
         internal static string ShortDisplayTitle {
             get {
