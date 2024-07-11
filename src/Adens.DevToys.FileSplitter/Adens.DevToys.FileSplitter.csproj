@@ -13,6 +13,8 @@
 	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
 	  <Authors>adensW</Authors>
 	  <PackageTags>devtoys-app</PackageTags>
+	  <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	  <PackageReadmeFile>FileSplitter.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

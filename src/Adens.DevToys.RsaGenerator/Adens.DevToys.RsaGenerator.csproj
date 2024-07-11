@@ -6,12 +6,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>true</IsPackable>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Title>RsaGenerator</Title>
 		<Description>Rsa Generator Utility</Description>
 		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
 		<Authors>adensW</Authors>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageReadmeFile>RsaGenerator.md</PackageReadmeFile>
 		<PackageTags>devtoys-app</PackageTags>
 	</PropertyGroup>
 
