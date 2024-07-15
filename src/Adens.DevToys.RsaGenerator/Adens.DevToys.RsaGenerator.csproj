@@ -12,7 +12,7 @@
 		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
 		<Authors>adensW</Authors>
-		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReadmeFile>RsaGenerator.md</PackageReadmeFile>
 		<PackageTags>devtoys-app</PackageTags>
 	</PropertyGroup>
@@ -20,7 +20,12 @@
 	<ItemGroup>
 		<PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\RsaGenerator.md" Pack="true" PackagePath=""/>
+	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="RsaGenerator.Designer.cs">
 	    <DependentUpon>RsaGenerator.resx</DependentUpon>
