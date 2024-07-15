@@ -31,7 +31,7 @@ internal sealed class FileSplitterGui : IGuiTool
     private static readonly SettingDefinition<string?> outputFilePath
     = new(
         name: $"{nameof(FileSplitterGui)}.{nameof(outputFilePath)}",
-        defaultValue: null);
+        defaultValue: "");
     private static readonly SettingDefinition<SplitType> splitType
     = new(
         name: $"{nameof(FileSplitterGui)}.{nameof(splitType)}",
@@ -49,25 +49,28 @@ internal sealed class FileSplitterGui : IGuiTool
     {
         _settingsProvider = settingsProvider;
         _fileStorage = fileStorage;
-        //_settingsProvider.SettingChanged += OnSettingChanged;
     }
 
-    //private void OnSettingChanged(object? sender, SettingChangedEventArgs e)
-    //{
-    //    if (e.SettingName == filePath.Name)
-    //    {
-    //        string trueoutput = GetOutputFilePath((string)e.NewValue);
-    //        _outputFilePathIinput.Text(trueoutput);
-
-    //        //_settingsProvider.SetSetting(FileSplitterGui.outputFilePath, trueoutput);
-    //    }
-    //}
+    
     private SandboxedFileReader inputFileReader=null;
     private readonly IUISingleLineTextInput _outputFilePathIinput = SingleLineTextInput();
-    private readonly IUIProgressRing _progressRing = ProgressRing();
-    private readonly IUILabel _resultLable = Label();
+    private readonly IUIProgressBar _progressBar = ProgressBar(nameof(_progressBar));
+    private readonly IUIInfoBar _infoBar = InfoBar(nameof(_infoBar)).Informational()
+                        .Title(FileSplitter.SplittedTitle)
+                        .Description(FileSplitter.SplittedDescrtion)
+                       ;
+    private readonly IUIInfoBar _errorBar = InfoBar(nameof(_errorBar))
+                      .Title(FileSplitter.ErrorInfoTitle)
+                      .Description(FileSplitter.ErrorInfoDescription)
+                     ;
     private readonly IUIFileSelector _fileSelector = FileSelector()
                         .CanSelectOneFile();
+    private readonly IUINumberInput _sizeInpt = NumberInput(nameof(_sizeInpt))
+                        .HideCommandBar()
+                        .CannotCopyWhenEditable();
+    private readonly IUINumberInput _lineInpt = NumberInput(nameof(_lineInpt))
+                        .HideCommandBar()
+                        .CannotCopyWhenEditable();
     public UIToolView View
     {
         get
@@ -83,35 +86,39 @@ internal sealed class FileSplitterGui : IGuiTool
                     SelectDropDownList()
                         .AlignHorizontally(UIHorizontalAlignment.Left)
                         .WithItems(
-                            Item("Size", SplitType.Size),
-                            Item("Line", SplitType.Line)
+                            Item(FileSplitter.SplitType_Size, SplitType.Size),
+                            Item(FileSplitter.SplitType_Line, SplitType.Line)
                             )
                         .OnItemSelected(OnSplitTypeSelected)
-                         .Select(0),
-                    NumberInput()
-                        .HideCommandBar()
-                        .CannotCopyWhenEditable()
-                        .Text("2097152")
+                         .Select((int)_settingsProvider.GetSetting(splitType)),
+                  _sizeInpt
+                  .Hide()
+                        .Text(_settingsProvider.GetSetting(size).ToString())
+                        .OnValueChanged(onSizeChanged),
+                   _lineInpt
+                      .Hide()
+                        .Text(_settingsProvider.GetSetting(line).ToString())
                         .OnValueChanged(onSizeChanged)
                         ),
-                  
                           _outputFilePathIinput
-                        .Title("output file path")
+                        .Title(FileSplitter.OutputFilePath)
                         .OnTextChanged(onOutputFilepathChanged)
                          .CommandBarExtraContent(
                             
                             Button()
-                            .Text("choose")
+                            .Text(FileSplitter.PickAFolder)
                             .OnClick(OnChooseOutputPathButtonClickAsync)),
                         
                    
                     Button()
-                        .Text("Split")
+                        .Text(FileSplitter.Split)
                         .OnClick(OnButtonClick),
-                    _progressRing.Hide(),
-                    _resultLable.Hide()
+                    _progressBar.StartIndeterminateProgress().Hide(),
+                    _infoBar.Informational()
+                        .Open().Hide()
 
             ));
+            SwitchSplitType();
             return _view;
         }
     }
@@ -128,10 +135,24 @@ internal sealed class FileSplitterGui : IGuiTool
         }
         _outputFilePathIinput.Text(folder);
     }
+    private void SwitchSplitType()
+    {
+        var st = _settingsProvider.GetSetting(splitType);
+        if (st == SplitType.Size)
+        {
+            _sizeInpt.Show();
+            _lineInpt.Hide();
+        }
+        else
+        {
+            _sizeInpt.Hide();
+            _lineInpt.Show();
+        }
+    }
     private async ValueTask OnSplitTypeSelected(IUIDropDownListItem? item)
     {
         _settingsProvider.SetSetting(splitType, (SplitType)item.Value);
-
+        SwitchSplitType();
     }
 
     private async ValueTask onSizeChanged(double arg)
@@ -153,8 +174,20 @@ internal sealed class FileSplitterGui : IGuiTool
         }
         return path;
     }
+    private string GetFileName(string fileName)
+    {
+        return fileName.Substring(0, fileName.LastIndexOf('.'));
+    }
+    private string GetFileNameExtension(string fileName)
+    {
+        return fileName.Substring(fileName.LastIndexOf('.'));
+    }
     private async ValueTask SplitBySize()
     {
+        if (inputFileReader == null)
+        {
+            return;
+        }
         var filename = inputFileReader.FileName;
         
         // Split file by size
@@ -171,7 +204,7 @@ internal sealed class FileSplitterGui : IGuiTool
                 }
                 byte[] buffer = new byte[chunkSize];
                 reader.Read(buffer, 0, chunkSize);
-                var tureOutputPath = _settingsProvider.GetSetting(FileSplitterGui.outputFilePath).Replace("{0}", surfix.ToString());
+                var tureOutputPath = Path.Combine( _settingsProvider.GetSetting(outputFilePath), GetFileName(filename) + "_"+surfix.ToString()+ GetFileNameExtension(filename));
                 // 保存到文件
                 using (FileStream fs = new FileStream(tureOutputPath, FileMode.Create))
                 {
@@ -190,41 +223,52 @@ internal sealed class FileSplitterGui : IGuiTool
         {
             return;
         }
+        var filename = inputFileReader.FileName;
+
         // split file by line
         using (var reader = new StreamReader(await inputFileReader.GetNewAccessToFileContentAsync(default)))
         {
             int cur = 0;
-            int max = _settingsProvider.GetSetting(size);
+            int max = _settingsProvider.GetSetting(line);
             int surfix = 1;
-            string line;
+            string curline;
             StringBuilder sb = new StringBuilder();
-            while ((line = reader.ReadLine()) != null)
+            while ((curline = reader.ReadLine()) != null)
             {
-                sb.AppendLine(line);
+                sb.AppendLine(curline);
                 cur++;
                 if (cur >= max)
                 {
-                    var tureOutputPath = _settingsProvider.GetSetting(FileSplitterGui.outputFilePath).Replace("{0}", surfix.ToString());
                     // 保存到文件
+                    await SaveLineFile(sb, filename, surfix);
                     cur = 0;
-                    using (FileStream fs = new FileStream(tureOutputPath, FileMode.Create))
-                    {
-                        await fs.WriteAsync(Encoding.UTF8.GetBytes(sb.ToString()));
-                        await fs.FlushAsync();
-                    }
                     surfix++;
                     sb.Clear();
                 }
-
             }
+            if (sb.Length > 0)
+            {
+                await SaveLineFile(sb, filename, surfix);
+                cur = 0;
+                surfix++;
+                sb.Clear();
+            }
+        }
+    }
+    private async Task SaveLineFile(StringBuilder sb,string filename,int surfix)
+    {
+        var tureOutputPath = Path.Combine(_settingsProvider.GetSetting(outputFilePath), GetFileName(filename) + "_" + surfix.ToString() + GetFileNameExtension(filename));
+        // 保存到文件
+        using (FileStream fs = new FileStream(tureOutputPath, FileMode.Create))
+        {
+            await fs.WriteAsync(Encoding.UTF8.GetBytes(sb.ToString()));
+            await fs.FlushAsync();
         }
     }
     private async ValueTask OnButtonClick()
     {
         try { 
-        _resultLable.Show();
-        _resultLable.Text("Splitting...");
-        _progressRing.Show();
+        _progressBar.Show();
         var st= _settingsProvider.GetSetting(splitType);
         switch (st)
         {
@@ -237,11 +281,16 @@ internal sealed class FileSplitterGui : IGuiTool
             default:
                 break;
         }
-        _progressRing.Hide();
-        _resultLable.Text("Splited");
+            _progressBar.Hide();
+        _infoBar.Show();
         }catch(IOException ex)
         {
-            _resultLable.Text(ex.Message);
+            _errorBar.Description(ex.Message);
+            _errorBar.Show();
+        }
+        finally
+        {
+            _progressBar.Hide();
 
         }
     }
