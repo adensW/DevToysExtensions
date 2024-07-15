@@ -79,11 +79,65 @@ namespace Adens.DevToys.RsaGenerator {
         }
         
         /// <summary>
+        ///   查找类似 Error 的本地化字符串。
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Bits should be 384  &lt;= bits &lt;= 16384 and be a multiple of 8 的本地化字符串。
+        /// </summary>
+        internal static string ErrorMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Generate 的本地化字符串。
+        /// </summary>
+        internal static string Generate {
+            get {
+                return ResourceManager.GetString("Generate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Key length 的本地化字符串。
+        /// </summary>
+        internal static string Keylength {
+            get {
+                return ResourceManager.GetString("Keylength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Rsa Generator 的本地化字符串。
         /// </summary>
         internal static string LongDisplayTitle {
             get {
                 return ResourceManager.GetString("LongDisplayTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Private key 的本地化字符串。
+        /// </summary>
+        internal static string Privatekey {
+            get {
+                return ResourceManager.GetString("Privatekey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Public key 的本地化字符串。
+        /// </summary>
+        internal static string Publickey {
+            get {
+                return ResourceManager.GetString("Publickey", resourceCulture);
             }
         }
         

@@ -1,10 +1,10 @@
 ﻿using DevToys.Api;
 using System.ComponentModel.Composition;
-namespace DevToys.Adens.FileSpliter;
+namespace Adens.DevToys.FileSplitter;
 
 [Export(typeof(IResourceAssemblyIdentifier))]
-[Name(nameof(FileSpliterResourceAssemblyIdentifier))]
-internal sealed class FileSpliterResourceAssemblyIdentifier : IResourceAssemblyIdentifier
+[Name(nameof(FileSplitterResourceAssemblyIdentifier))]
+internal sealed class FileSplitterResourceAssemblyIdentifier : IResourceAssemblyIdentifier
 {
     public ValueTask<FontDefinition[]> GetFontDefinitionsAsync()
     {

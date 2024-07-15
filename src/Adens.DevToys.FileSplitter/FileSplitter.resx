@@ -118,18 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessibleName" xml:space="preserve">
-    <value>A File Spliter extension for DevToys</value>
+    <value>A File Splitter extension for DevToys</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Split file</value>
   </data>
+  <data name="ErrorInfoDescription" xml:space="preserve">
+    <value>An unexpected error has occurred.</value>
+  </data>
+  <data name="ErrorInfoTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
   <data name="LongDisplayTitle" xml:space="preserve">
-    <value>File Spliter</value>
+    <value>File Splitter</value>
+  </data>
+  <data name="OutputFilePath" xml:space="preserve">
+    <value>Output path</value>
+  </data>
+  <data name="PickAFolder" xml:space="preserve">
+    <value>Select save path</value>
   </data>
   <data name="ShortDisplayTitle" xml:space="preserve">
-    <value>File Spliter</value>
+    <value>File Splitter</value>
+  </data>
+  <data name="Split" xml:space="preserve">
+    <value>Split</value>
   </data>
   <data name="SplitSize" xml:space="preserve">
     <value>Split size (KB) :</value>
+  </data>
+  <data name="SplittedDescrtion" xml:space="preserve">
+    <value>File has been split successfully.</value>
+  </data>
+  <data name="SplittedTitle" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SplitType_Line" xml:space="preserve">
+    <value>Line</value>
+  </data>
+  <data name="SplitType_Size" xml:space="preserve">
+    <value>Size</value>
   </data>
 </root>

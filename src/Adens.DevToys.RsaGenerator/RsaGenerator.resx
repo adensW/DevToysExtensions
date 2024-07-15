@@ -123,8 +123,26 @@
   <data name="Description" xml:space="preserve">
     <value>A Rsa keypair generator extension for DevToys</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Bits should be 384  &lt;= bits &lt;= 16384 and be a multiple of 8</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="Keylength" xml:space="preserve">
+    <value>Key length</value>
+  </data>
   <data name="LongDisplayTitle" xml:space="preserve">
     <value>Rsa Generator</value>
+  </data>
+  <data name="Privatekey" xml:space="preserve">
+    <value>Private key</value>
+  </data>
+  <data name="Publickey" xml:space="preserve">
+    <value>Public key</value>
   </data>
   <data name="ShortDisplayTitle" xml:space="preserve">
     <value>Rsa Generator</value>

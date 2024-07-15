@@ -21,18 +21,7 @@ namespace Adens.DevToys.RsaGenerator;
     AccessibleNameResourceName = nameof(RsaGenerator.AccessibleName))]
 internal sealed class RsaGeneratorGui : IGuiTool
 {
-    private enum GridRows
-    {
-        Settings,
-        Results
-
-    }
-
-    private enum GridColumns
-    {
-        Private,
-        Public
-    }
+  
     private UIToolView? _view;
     private readonly ISettingsProvider _settingsProvider;
 
@@ -43,11 +32,11 @@ internal sealed class RsaGeneratorGui : IGuiTool
         Generate(2048);
     }
 
-    private readonly IUIMultiLineTextInput _pubKeyText = MultiLineTextInput("_pubKeyText").ReadOnly();
-    private readonly IUIMultiLineTextInput _privKeyText = MultiLineTextInput("_privKeyText").ReadOnly();
-    private readonly IUIInfoBar _infoBar = InfoBar("infobar").Title("Error").Description("Bits should be 384  <= bits <= 16384 and be a multiple of 8").HideIcon().Error().Closable();
+    private readonly IUIMultiLineTextInput _pubKeyText = MultiLineTextInput("_pubKeyText").Title(RsaGenerator.Publickey).ReadOnly();
+    private readonly IUIMultiLineTextInput _privKeyText = MultiLineTextInput("_privKeyText").Title(RsaGenerator.Privatekey).ReadOnly();
+    private readonly IUIInfoBar _infoBar = InfoBar("infobar").Title(RsaGenerator.Error).Description(RsaGenerator.ErrorMessage).HideIcon().Error().Closable();
     private readonly IUINumberInput _bitInput = NumberInput("_bitInput")
-                        .Title("Key Length")
+                        .Title(RsaGenerator.Keylength)
                         .HideCommandBar()
                         .CannotCopyWhenEditable()
                         .Text("2048")
@@ -58,43 +47,28 @@ internal sealed class RsaGeneratorGui : IGuiTool
         {
             _view ??=
             new(
-                Grid()
-                .Rows(
-                    (GridRows.Settings, Auto),
-                    (GridRows.Results, new UIGridLength(1, UIGridUnitType.Fraction))
-                )
-                .Columns(
-                    (GridColumns.Private, new UIGridLength(1, UIGridUnitType.Fraction)),
-                    (GridColumns.Public, new UIGridLength(1, UIGridUnitType.Fraction))
-                )
-                .Cells(
-                    Cell(
-                        GridRows.Settings,
-                        GridRows.Settings,
-                        GridColumns.Private,
-                        GridColumns.Public,
-                        Stack()
+                 SplitGrid()
+                .Horizontal()
+                .TopPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+                .BottomPaneLength(new UIGridLength(8, UIGridUnitType.Fraction))
+                .WithTopPaneChild(
+                              Stack()
                         .Vertical()
                         .WithChildren(
                             _bitInput.OnValueChanged(onSizeChanged),
                             _infoBar,
 
-                            Button().Text("Generate")
+                            Button().Text(RsaGenerator.Generate)
                             .OnClick(onGenerateClick)
-                            )
-                        ),
-                  
-                    Cell(
-                        GridRows.Results,
-                        GridColumns.Private,
-                        _privKeyText
-                        ),
-                    Cell(
-                        GridRows.Results,
-                        GridColumns.Public,
-                        _pubKeyText
-                        )
-                 )
+                            ))
+                .WithBottomPaneChild(
+
+                    SplitGrid()
+                        .Vertical()
+                        .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+                        .RightPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+                        .WithLeftPaneChild(_privKeyText)
+                        .WithRightPaneChild(_pubKeyText))
             );
             return _view;
         }
@@ -113,7 +87,7 @@ internal sealed class RsaGeneratorGui : IGuiTool
         if (bit > 16384 || bit < 384 || bit % 8 != 0)
         {
             _infoBar.Open();
-            _infoBar.Description("Bits should be 384  <= bits <= 16384 and be a multiple of 8");
+            _infoBar.Description(RsaGenerator.ErrorMessage);
             _privKeyText.Text("");
             _pubKeyText.Text("");
         }
@@ -129,7 +103,7 @@ internal sealed class RsaGeneratorGui : IGuiTool
         if (bit > 16384 || bit < 384 || bit % 8 != 0)
         {
             _infoBar.Open();
-            _infoBar.Description("Bits should be 384  <= bits <= 16384 and be a multiple of 8");
+            _infoBar.Description(RsaGenerator.ErrorMessage);
             return;
         }
         using var rsa = new RSACryptoServiceProvider(bit);

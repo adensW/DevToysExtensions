@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevToys.Adens.FileSpliter {
+namespace Adens.DevToys.FileSplitter {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DevToys.Adens.FileSpliter {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class FileSpliter {
+    internal class FileSplitter {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal FileSpliter() {
+        internal FileSplitter() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DevToys.Adens.FileSpliter {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevToys.Adens.FileSpliter.FileSpliter", typeof(FileSpliter).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Adens.DevToys.FileSplitter.FileSplitter", typeof(FileSplitter).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 A File Spliter extension for DevToys 的本地化字符串。
+        ///   查找类似 A File Splitter extension for DevToys 的本地化字符串。
         /// </summary>
         internal static string AccessibleName {
             get {
@@ -79,7 +79,25 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 File Spliter 的本地化字符串。
+        ///   查找类似 An unexpected error has occurred. 的本地化字符串。
+        /// </summary>
+        internal static string ErrorInfoDescription {
+            get {
+                return ResourceManager.GetString("ErrorInfoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Error 的本地化字符串。
+        /// </summary>
+        internal static string ErrorInfoTitle {
+            get {
+                return ResourceManager.GetString("ErrorInfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 File Splitter 的本地化字符串。
         /// </summary>
         internal static string LongDisplayTitle {
             get {
@@ -88,11 +106,38 @@ namespace DevToys.Adens.FileSpliter {
         }
         
         /// <summary>
-        ///   查找类似 File Spliter 的本地化字符串。
+        ///   查找类似 Output path 的本地化字符串。
+        /// </summary>
+        internal static string OutputFilePath {
+            get {
+                return ResourceManager.GetString("OutputFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Select save path 的本地化字符串。
+        /// </summary>
+        internal static string PickAFolder {
+            get {
+                return ResourceManager.GetString("PickAFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 File Splitter 的本地化字符串。
         /// </summary>
         internal static string ShortDisplayTitle {
             get {
                 return ResourceManager.GetString("ShortDisplayTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Split 的本地化字符串。
+        /// </summary>
+        internal static string Split {
+            get {
+                return ResourceManager.GetString("Split", resourceCulture);
             }
         }
         
@@ -102,6 +147,42 @@ namespace DevToys.Adens.FileSpliter {
         internal static string SplitSize {
             get {
                 return ResourceManager.GetString("SplitSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 File has been split successfully. 的本地化字符串。
+        /// </summary>
+        internal static string SplittedDescrtion {
+            get {
+                return ResourceManager.GetString("SplittedDescrtion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Status 的本地化字符串。
+        /// </summary>
+        internal static string SplittedTitle {
+            get {
+                return ResourceManager.GetString("SplittedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Line 的本地化字符串。
+        /// </summary>
+        internal static string SplitType_Line {
+            get {
+                return ResourceManager.GetString("SplitType_Line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Size 的本地化字符串。
+        /// </summary>
+        internal static string SplitType_Size {
+            get {
+                return ResourceManager.GetString("SplitType_Size", resourceCulture);
             }
         }
     }
