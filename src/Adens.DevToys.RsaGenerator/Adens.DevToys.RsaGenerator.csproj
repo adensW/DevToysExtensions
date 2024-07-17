@@ -24,7 +24,7 @@
 		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\RsaGenerator.md" Pack="true" PackagePath=""/>
+		<None Include="..\..\doc\RsaGenerator.md" Pack="true" PackagePath=""/>
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="RsaGenerator.Designer.cs">

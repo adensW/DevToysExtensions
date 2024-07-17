@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RootNamespace>Adens.DevToys</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ExecutorsGroup.cs" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
+	</ItemGroup>
+</Project>

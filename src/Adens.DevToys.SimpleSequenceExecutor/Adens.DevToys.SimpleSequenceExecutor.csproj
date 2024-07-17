@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <PackageId>Adens.DevToys.SimpleSequenceExecutor</PackageId>
+	  <TargetFramework>net8.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <IsPackable>true</IsPackable>
+	  <Version>1.0.2</Version>
+	  <Title>SimpleSequenceExecutor</Title>
+	  <Description>Simple Sequence Executor</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>SimpleSequenceExecutor.md</PackageReadmeFile>
+	  <PackageTags>devtoys-app</PackageTags>
+  </PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\doc\SimpleSequenceExecutor.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="SimpleSequenceExecutor.Designer.cs">
+			<DependentUpon>SimpleSequenceExecutor.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="SimpleSequenceExecutor.resx">
+			<LastGenOutput>SimpleSequenceExecutor.Designer.cs</LastGenOutput>
+			<Generator>ResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="UI\Executors\" />
+	</ItemGroup>
+</Project>

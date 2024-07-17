@@ -12,6 +12,22 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adens.DevToys.RsaGenerator", "src\Adens.DevToys.RsaGenerator\Adens.DevToys.RsaGenerator.csproj", "{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{425E32B5-032B-4BD5-BFF7-9B09B59E1068}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adens.DevToys.SimpleSequenceExecutor", "src\Adens.DevToys.SimpleSequenceExecutor\Adens.DevToys.SimpleSequenceExecutor.csproj", "{170E74DB-3102-4A7F-9401-36F53C824D8A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adens.DevToys.Shared", "src\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj", "{7609061D-8275-4014-937F-B29BC079B45C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{43221405-0366-422D-8FCD-0D18CF93779B}"
+	ProjectSection(SolutionItems) = preProject
+		doc\FileSplitter.md = doc\FileSplitter.md
+		doc\RsaGenerator.md = doc\RsaGenerator.md
+		doc\SimpleSequenceExecutor.md = doc\SimpleSequenceExecutor.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +43,14 @@ Global
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170E74DB-3102-4A7F-9401-36F53C824D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170E74DB-3102-4A7F-9401-36F53C824D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170E74DB-3102-4A7F-9401-36F53C824D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170E74DB-3102-4A7F-9401-36F53C824D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7609061D-8275-4014-937F-B29BC079B45C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7609061D-8275-4014-937F-B29BC079B45C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7609061D-8275-4014-937F-B29BC079B45C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7609061D-8275-4014-937F-B29BC079B45C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +58,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8B739686-B00B-46D6-93FD-AF2D952F5603} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
+		{170E74DB-3102-4A7F-9401-36F53C824D8A} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
+		{7609061D-8275-4014-937F-B29BC079B45C} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE85D6B2-DF1A-4DCE-A204-81FAF65DC888}
