@@ -39,8 +39,4 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 		</EmbeddedResource>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="UI\Executors\" />
-	</ItemGroup>
 </Project>

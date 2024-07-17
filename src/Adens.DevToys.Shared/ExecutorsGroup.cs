@@ -11,12 +11,11 @@ namespace Adens.DevToys;
 [Name(PredefinedAdensToolGroupNames.Executors)]
 internal class ExecutorsGroup : GuiToolGroup
 {
-    [ImportingConstructor]
     internal ExecutorsGroup()
     {
         IconFontName = "FluentSystemIcons";
         IconGlyph = '\uE445';
         DisplayTitle = PredefinedAdensToolGroupNames.Executors;
-        AccessibleName = "Adens.DevToys";
+        AccessibleName = "Executors";
     }
 }

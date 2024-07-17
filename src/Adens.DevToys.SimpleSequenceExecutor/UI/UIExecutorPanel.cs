@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static DevToys.Api.GUI;
+using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public interface IUIExecutorPanel : IUICard
 {
@@ -46,23 +47,25 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
     }
     internal UIExecutorPanel(string? id):base(id)
     {
-        UIElement = Stack().Vertical().WithChildren(
-          Label().Text("No Executors")
-          );
         _button.OnClick(OnAddStepClickAsync);
     }
     private IUIButton _button = Button().Text("add");
     internal void Render()
     {
+        if (_bundle == null)
+        {
+            return;
+        }
         List<IUIElement> list = new List<IUIElement>();
         foreach (var step in _bundle.Steps)
         {
             list.Add(Label().Text(step.Type));
         }
+        list.Add(UIExecutorWrapper(ChoseStepExecutor()));
         UIElement = Stack().Vertical().WithChildren(
             Label().Text(_bundle.Name),
             Stack().Vertical().WithChildren(
-           list.ToArray()
+            list.ToArray()
                 ),
             _button
             );
