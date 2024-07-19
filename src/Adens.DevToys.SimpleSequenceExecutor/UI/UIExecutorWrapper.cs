@@ -1,8 +1,10 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using CommunityToolkit.Diagnostics;
 using DevToys.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using static DevToys.Api.GUI;
@@ -36,10 +38,25 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
     public IUIExecutor UIExecutor { get=> _executor
 
             ; internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
+    private IUISelectDropDownList _select;
 
     internal UIExecutorWrapper(string? id,IUIExecutor executor) : base(id)
     {
-        UIElement = SplitGrid()
+        List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
+
+        foreach (var item in Constants.Executors)
+        {
+            menus.Add(Item(text: item, value: item));
+        }
+        _select = SelectDropDownList()
+                    .AlignHorizontally(UIHorizontalAlignment.Left)
+                    .WithItems(
+                    menus.ToArray())
+                    .OnItemSelected(OnItemClickAsync);
+        UIElement =
+            SplitGrid().Horizontal().TopPaneLength(new UIGridLength(300, UIGridUnitType.Pixel)).BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+            .WithTopPaneChild(Button().Text("Top")).WithBottomPaneChild(
+                    SplitGrid()
                         .Vertical()
                         .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
                         .RightPaneLength(new UIGridLength(50, UIGridUnitType.Pixel))
@@ -50,7 +67,16 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
                             Button().Icon("FluentSystemIcons", '\uF34C'),
                             Button().Icon("FluentSystemIcons", '\uF14F'),
                             Button().Icon("FluentSystemIcons", '\uE56F')
-            ));
+            ))
+                        );
+    }
+    private async ValueTask OnItemClickAsync(IUIDropDownListItem? item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+     
     }
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;

@@ -14,30 +14,22 @@ internal class ChoseStepExecutor : UIElement, IUIExecutor
     public ChoseStepExecutor(string? id
     ) : base(id)
     {
-        List<IUIDropDownMenuItem> menus = new List<IUIDropDownMenuItem>();
+        List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
         foreach (var item in _executors)
         {
-            menus.Add(DropDownMenuItem(item).OnClick(OnMenuClickAsync));
+            menus.Add(Item(text: item, value: item));
         }
-        UIElement = DropDownButton()
+        UIElement = SelectDropDownList()
                 .AlignHorizontally(UIHorizontalAlignment.Left)
-                .Icon("FluentSystemIcons", '\uE670')
-                .Text("Click to open")
-                .WithMenuItems(
-                    DropDownMenuItem("Item 1"),
-                    DropDownMenuItem()
-                        .Text("Item 2")
-                        .Icon("FluentSystemIcons", '\uE670'),
-                    DropDownMenuItem()
-                        .Text("Item 3")
-                      ,
-                    DropDownMenuItem("Item 4"));
+                .WithItems(
+                menus.ToArray())
+                .OnItemSelected(OnItemClickAsync);
     }
 
-    private async ValueTask OnMenuClickAsync()
+    private async ValueTask OnItemClickAsync(IUIDropDownListItem? item)
     {
-        var a = this;
-        
+        var executorName = item.Value;
+
     }
 
     public bool CanExecute => false;

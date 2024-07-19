@@ -45,11 +45,19 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         get=>_ui;
         internal set => _ui=value;
     }
+
     internal UIExecutorPanel(string? id):base(id)
     {
-        _button.OnClick(OnAddStepClickAsync);
+        _button.OnClick(AddButtonClick);
     }
-    private IUIButton _button = Button().Text("add");
+
+    private ValueTask RenderEventAction()
+    {
+        Render();
+        return ValueTask.CompletedTask;
+    }
+
+    private IUIButton _button= Button().Text("Add");
     internal void Render()
     {
         if (_bundle == null)
@@ -59,9 +67,13 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         List<IUIElement> list = new List<IUIElement>();
         foreach (var step in _bundle.Steps)
         {
-            list.Add(Label().Text(step.Type));
+            var wrapper = Generate(step);
+            if (wrapper == null)
+            {
+                continue;
+            }
+            list.Add(wrapper);
         }
-        list.Add(UIExecutorWrapper(ChoseStepExecutor()));
         UIElement = Stack().Vertical().WithChildren(
             Label().Text(_bundle.Name),
             Stack().Vertical().WithChildren(
@@ -71,11 +83,22 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
             );
     }
 
-    private async ValueTask OnAddStepClickAsync()
+    private async ValueTask AddButtonClick()
     {
-        _bundle.Steps.Add(new ExecutorStep() { Type= "1"});
-        Render();
-        Bundle = _bundle;
+        Bundle.Steps.Add(new ExecutorStep());
+    }
+
+    private IUIExecutorWrapper? Generate(ExecutorStep step)
+    {
+        switch (step.Type)
+        {
+            case "TextDisplay":
+                return UIExecutorWrapper(TextDisplayExecutor());
+            case "EmptyDisplay":
+            default:
+                 return UIExecutorWrapper(EmptyExecutor());
+                ;
+        }
     }
 
     public ExecutorBundle? Bundle { 
@@ -86,7 +109,6 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
     public event EventHandler? BundleChanged;
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
-    public event EventHandler? ChildrenChanged;
 
    
 }

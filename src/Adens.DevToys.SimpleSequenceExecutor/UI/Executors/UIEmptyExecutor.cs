@@ -10,12 +10,12 @@ using static DevToys.Api.GUI;
 
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 [Export(typeof(IUIExecutor))]
-internal class TextDisplayExecutor : UIElement, IUIExecutor
+internal class UIEmptyExecutor : UIElement, IUIExecutor
 {
     public string Text { get;  set; } = string.Empty;
-    public TextDisplayExecutor(string? id) : base(id)
+    public UIEmptyExecutor(string? id) : base(id)
     {
-        UIElement = Label();
+        UIElement = Label("Empty");
     }
 
     public bool CanExecute => false;
@@ -26,19 +26,19 @@ internal class TextDisplayExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor TextDisplayExecutor()
+    public static IUIExecutor EmptyExecutor()
     {
-        return TextDisplayExecutor(null);
+        return EmptyExecutor(null);
     }
 
 
-    public static IUIExecutor TextDisplayExecutor(string? id)
+    public static IUIExecutor EmptyExecutor(string? id)
     {
-        return new TextDisplayExecutor(id);
+        return new UIEmptyExecutor(id);
     }
     public static IUIExecutor Text(this IUIExecutor element, string text)
     {
-        ((TextDisplayExecutor)element).Text = text;
+        ((UITextDisplayExecutor)element).Text = text;
         return element;
     }
 
