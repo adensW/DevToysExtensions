@@ -10,10 +10,15 @@ using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 internal class ChoseStepExecutor : UIElement, IUIExecutor
 {
-    private IEnumerable<Lazy<IUIExecutor>> _executors;
+    private string[] _executors= ["TextDisplay"];
     public ChoseStepExecutor(string? id
     ) : base(id)
     {
+        List<IUIDropDownMenuItem> menus = new List<IUIDropDownMenuItem>();
+        foreach (var item in _executors)
+        {
+            menus.Add(DropDownMenuItem(item).OnClick(OnMenuClickAsync));
+        }
         UIElement = DropDownButton()
                 .AlignHorizontally(UIHorizontalAlignment.Left)
                 .Icon("FluentSystemIcons", '\uE670')
@@ -27,6 +32,12 @@ internal class ChoseStepExecutor : UIElement, IUIExecutor
                         .Text("Item 3")
                       ,
                     DropDownMenuItem("Item 4"));
+    }
+
+    private async ValueTask OnMenuClickAsync()
+    {
+        var a = this;
+        
     }
 
     public bool CanExecute => false;
