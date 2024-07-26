@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public static class Constants
 {
+    public const string EmptyExecutor = "Empty";
+    public const string TextDisplayExecutor = "TextDisplay";
     public static string[] Executors = [
-        "TextDisplay",
+       EmptyExecutor,
+       TextDisplayExecutor,
 
-        "Empty"
+        
         ];
 }

@@ -9,4 +9,5 @@ namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public interface IUIExecutor : IUICard
 {
     bool CanExecute { get; }
+    ValueTask ExecuteAsync();
 }

@@ -3,16 +3,30 @@ using CommunityToolkit.Diagnostics;
 using DevToys.Api;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
+public class StepChangedArgs : EventArgs
+{
+    public string Id { get; set; }
+    public string NewType { get; set; }
+    
 
+    public StepChangedArgs(string newType) :base()
+    {
+        NewType = newType;
+    }
+}
 public interface IUIExecutorWrapper : IUICard
 {
     IUIExecutor UIExecutor { get; }
+    event EventHandler<StepChangedArgs>? StepChanged;
+    event EventHandler? UIExecutorChanged;
+    ValueTask ExecuteAsync();
 }
 internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
 {
@@ -29,18 +43,25 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         get => _spacing;
         internal set => SetPropertyValue(ref _spacing, value, SpacingChanged);
     }
-
+    private IUIElement _ui;
     public IUIElement UIElement
     {
-        get;
+        get =>_ui;
     }
     private IUIExecutor _executor;
-    public IUIExecutor UIExecutor { get=> _executor
-
-            ; internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
-    private IUISelectDropDownList _select;
+    public IUIExecutor UIExecutor { 
+        get=> _executor;
+        internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
+    private IUIStack _select;
 
     internal UIExecutorWrapper(string? id,IUIExecutor executor) : base(id)
+    {
+        UIExecutor = executor;
+        Render();
+    }
+
+
+    private void Render()
     {
         List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
 
@@ -48,19 +69,22 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         {
             menus.Add(Item(text: item, value: item));
         }
-        _select = SelectDropDownList()
+        _select =
+            Stack().Horizontal().NoSpacing().WithChildren(
+                Card(Label().Style(UILabelStyle.Body).Text("Select a executor:")), Card(SelectDropDownList()
                     .AlignHorizontally(UIHorizontalAlignment.Left)
                     .WithItems(
                     menus.ToArray())
-                    .OnItemSelected(OnItemClickAsync);
-        UIElement =
-            SplitGrid().Horizontal().TopPaneLength(new UIGridLength(300, UIGridUnitType.Pixel)).BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
-            .WithTopPaneChild(Button().Text("Top")).WithBottomPaneChild(
+                    .OnItemSelected(OnItemClickAsync)));
+
+        _ui =
+            SplitGrid().Horizontal().TopPaneLength(new UIGridLength(80, UIGridUnitType.Pixel)).BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+            .WithTopPaneChild(_select).WithBottomPaneChild(
                     SplitGrid()
                         .Vertical()
                         .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
                         .RightPaneLength(new UIGridLength(50, UIGridUnitType.Pixel))
-                        .WithLeftPaneChild(executor)
+                        .WithLeftPaneChild(UIExecutor)
                         .WithRightPaneChild(Stack().SmallSpacing().Vertical().WithChildren(
                             Button().Icon("FluentSystemIcons", '\uE571'),
                             Button().Icon("FluentSystemIcons", '\uF1A5'),
@@ -76,13 +100,23 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         {
             return;
         }
-     
+        StepChanged?.Invoke(this, new StepChangedArgs(item.Value as string));
+
     }
+
+    public async ValueTask ExecuteAsync()
+    {
+
+        if (_executor != null)
+        {
+            await _executor.ExecuteAsync();
+        }
+    }
+
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
     public event EventHandler? UIExecutorChanged;
-
-
+    public event EventHandler<StepChangedArgs>? StepChanged;
 }
 public static partial class GUI
 {

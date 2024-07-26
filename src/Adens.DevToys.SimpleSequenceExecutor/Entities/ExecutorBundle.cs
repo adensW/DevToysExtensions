@@ -25,6 +25,7 @@ public class ExecutorBundle
 }
 public class ExecutorStep
 {
+    public string Id { get; set; }
     public string Type { get; set; }
     public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
 }

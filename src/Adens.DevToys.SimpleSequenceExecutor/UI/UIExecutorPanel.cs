@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static DevToys.Api.GUI;
 using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
+using System.Text.Json;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public interface IUIExecutorPanel : IUICard
 {
@@ -45,16 +46,32 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         get=>_ui;
         internal set => _ui=value;
     }
-
+    private List<IUIExecutorWrapper> _executors ;
+    private int _signal = 0;
+    public int Signal
+    {
+        get=>_signal;
+        internal set => SetPropertyValue(ref _signal, value, ExecuteTrigger);
+    }
     internal UIExecutorPanel(string? id):base(id)
     {
         _button.OnClick(AddButtonClick);
+        BundleChanged += RenderEventAction;
+        ExecuteTrigger += Execute;
     }
 
-    private ValueTask RenderEventAction()
+    private void Execute(object? sender, EventArgs e)
+    {
+       
+        foreach (var item in _executors)
+        {
+              item.ExecuteAsync();
+        }
+    }
+
+    private void RenderEventAction(object? sender, EventArgs e)
     {
         Render();
-        return ValueTask.CompletedTask;
     }
 
     private IUIButton _button= Button().Text("Add");
@@ -64,7 +81,7 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         {
             return;
         }
-        List<IUIElement> list = new List<IUIElement>();
+        _executors = new List<IUIExecutorWrapper>();
         foreach (var step in _bundle.Steps)
         {
             var wrapper = Generate(step);
@@ -72,33 +89,63 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
             {
                 continue;
             }
-            list.Add(wrapper);
+
+            _executors.Add(wrapper);
         }
         UIElement = Stack().Vertical().WithChildren(
+            Stack().Horizontal().WithChildren(
             Label().Text(_bundle.Name),
+            Button().Text("Execute").OnClick(OnExecuteClick)
+
+            ),
             Stack().Vertical().WithChildren(
-            list.ToArray()
+            _executors.ToArray()
                 ),
             _button
             );
     }
 
+    private async ValueTask OnExecuteClick()
+    {
+        Signal++;
+    }
+
     private async ValueTask AddButtonClick()
     {
-        Bundle.Steps.Add(new ExecutorStep());
+        var a = JsonSerializer.Deserialize< ExecutorBundle >(JsonSerializer.Serialize( _bundle));
+        a.Steps.Add(new ExecutorStep());
+        Bundle = a;
     }
 
     private IUIExecutorWrapper? Generate(ExecutorStep step)
     {
+        var executor = UIExecutorWrapper(EmptyExecutor());
         switch (step.Type)
         {
-            case "TextDisplay":
-                return UIExecutorWrapper(TextDisplayExecutor());
-            case "EmptyDisplay":
+            case Constants.TextDisplayExecutor:
+                executor= UIExecutorWrapper(TextDisplayExecutor());
+                break;
+            case Constants.EmptyExecutor:
             default:
-                 return UIExecutorWrapper(EmptyExecutor());
+                break;
                 ;
         }
+        executor.StepChanged += Executor_StepChanged;
+        return executor;
+    }
+
+    private void Executor_StepChanged(object? sender, StepChangedArgs e)
+    {
+        _bundle.Steps.ForEach(z =>
+        {
+            if (z.Id == e.Id) {
+                z.Type = e.NewType;
+            }
+        }
+        );
+        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+        Bundle = a;
+
     }
 
     public ExecutorBundle? Bundle { 
@@ -109,8 +156,9 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
     public event EventHandler? BundleChanged;
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
+    private event EventHandler? ExecuteTrigger;
 
-   
+
 }
 public static partial class GUI
 {

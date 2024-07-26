@@ -15,13 +15,17 @@ internal class UIEmptyExecutor : UIElement, IUIExecutor
     public string Text { get;  set; } = string.Empty;
     public UIEmptyExecutor(string? id) : base(id)
     {
-        UIElement = Label("Empty");
+        UIElement = Label().Text("Empty");
     }
 
     public bool CanExecute => false;
 
     public IUIElement UIElement { get; }
 
+    public ValueTask ExecuteAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
 }
 public static partial class GUI
 {

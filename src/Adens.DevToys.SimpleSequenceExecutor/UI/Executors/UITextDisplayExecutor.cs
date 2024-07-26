@@ -15,12 +15,17 @@ internal class UITextDisplayExecutor : UIElement, IUIExecutor
     public string Text { get;  set; } = string.Empty;
     public UITextDisplayExecutor(string? id) : base(id)
     {
-        UIElement = Label();
+        UIElement = Label().Text("111");
     }
     public bool CanExecute => false;
 
     public IUIElement UIElement { get; }
 
+    public ValueTask ExecuteAsync()
+    {
+        (UIElement as IUILabel).Text("222");
+        return ValueTask.CompletedTask;
+    }
 }
 public static partial class GUI
 {
