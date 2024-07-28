@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+     <TargetFrameworks>$(NetCore)</TargetFrameworks>
+    <PackageId>Adens.DevToys.Shared</PackageId>
+    <Version>1.0.2</Version>
+    <Title>Adens.DevToys.Shared</Title>
+    <Description>Adens.DevToys.Shared</Description>
+    <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+    <Authors>adensW</Authors>
+    <!--<PackageLicenseFile>LICENSE</PackageLicenseFile>-->
+    <!--<PackageReadmeFile>RsaGenerator.md</PackageReadmeFile>-->
+    <PackageTags>devtoys-app</PackageTags>
 	  <RootNamespace>Adens.DevToys</RootNamespace>
   </PropertyGroup>
 
@@ -11,6 +19,7 @@
     <Compile Remove="ExecutorsGroup.cs" />
   </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
+    <PackageReference Include="DevToys.Api" />
+    <PackageReference Include="CliWrap"  />
 	</ItemGroup>
 </Project>

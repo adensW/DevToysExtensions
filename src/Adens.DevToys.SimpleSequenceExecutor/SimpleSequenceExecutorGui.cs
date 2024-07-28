@@ -52,7 +52,7 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
     {
         _settingsProvider = settingsProvider;
         _settingsProvider.SettingChanged += OnSettingChanged;
-        RefreshBundles();
+        RefreshBundles(); RefreshCurrentBundles();
     }
 
     private void OnSettingChanged(object? sender, SettingChangedEventArgs e)

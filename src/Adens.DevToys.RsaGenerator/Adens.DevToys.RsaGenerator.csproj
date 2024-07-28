@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		 <TargetFrameworks>$(NetCore)</TargetFrameworks>
 		<PackageId>Adens.DevToys.RsaGenerator</PackageId>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<IsPackable>true</IsPackable>
 		<Version>1.0.2</Version>
 		<Title>RsaGenerator</Title>
 		<Description>Rsa Generator Utility</Description>
@@ -18,14 +15,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
+		<PackageReference Include="DevToys.Api"  />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
-	</ItemGroup>
-	<ItemGroup>
 		<None Include="..\..\doc\RsaGenerator.md" Pack="true" PackagePath=""/>
 	</ItemGroup>
+
 	<ItemGroup>
 	  <Compile Update="RsaGenerator.Designer.cs">
 	    <DependentUpon>RsaGenerator.resx</DependentUpon>

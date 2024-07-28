@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>$(NetCore)</TargetFrameworks>
 	  <PackageId>Adens.DevToys.FileSplitter</PackageId>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  <IsPackable>true</IsPackable>
 	  <Version>1.0.2</Version>
 	  <Title>FileSplitter</Title>
 	  <Description>File Splitter Utility</Description>
@@ -23,12 +20,11 @@
 
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
-	</ItemGroup>
-	<ItemGroup>
 		<None Include="..\..\doc\FileSplitter.md" Pack="true" PackagePath=""/>
+
 	</ItemGroup>
 	<ItemGroup>
-    <PackageReference Include="DevToys.Api" Version="2.0.2-preview" />
+    <PackageReference Include="DevToys.Api" />
   </ItemGroup>
 
   <ItemGroup>

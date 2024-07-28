@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	   <TargetFrameworks>$(NetCore)</TargetFrameworks>
+
 	  <PackageId>Adens.DevToys.SimpleSequenceExecutor</PackageId>
-	  <TargetFramework>net8.0</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-	  <IsPackable>true</IsPackable>
 	  <Version>1.0.2</Version>
 	  <Title>SimpleSequenceExecutor</Title>
 	  <Description>Simple Sequence Executor</Description>
@@ -18,10 +16,9 @@
   </PropertyGroup>
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Include="..\..\doc\SimpleSequenceExecutor.md" Pack="true" PackagePath="" />
 	</ItemGroup>
+
 	<ItemGroup>
 	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
 	</ItemGroup>
@@ -39,4 +36,6 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 		</EmbeddedResource>
 	</ItemGroup>
+  <!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+  
 </Project>

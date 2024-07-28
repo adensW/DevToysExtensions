@@ -16,7 +16,7 @@ public class StepChangedArgs : EventArgs
     public string NewType { get; set; }
     
 
-    public StepChangedArgs(string newType) :base()
+    public StepChangedArgs(string id, string newType) :base()
     {
         NewType = newType;
     }
@@ -56,13 +56,8 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
 
     internal UIExecutorWrapper(string? id,IUIExecutor executor) : base(id)
     {
-        UIExecutor = executor;
-        Render();
-    }
+        UIExecutorChanged += Rerender;
 
-
-    private void Render()
-    {
         List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
 
         foreach (var item in Constants.Executors)
@@ -70,13 +65,22 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
             menus.Add(Item(text: item, value: item));
         }
         _select =
-            Stack().Horizontal().NoSpacing().WithChildren(
-                Card(Label().Style(UILabelStyle.Body).Text("Select a executor:")), Card(SelectDropDownList()
-                    .AlignHorizontally(UIHorizontalAlignment.Left)
-                    .WithItems(
-                    menus.ToArray())
-                    .OnItemSelected(OnItemClickAsync)));
+         Stack().Horizontal().NoSpacing().WithChildren(
+             Card(Label().Style(UILabelStyle.Body).Text("Select a executor:")), Card(SelectDropDownList(Guid.NewGuid().ToString())
+                 .AlignHorizontally(UIHorizontalAlignment.Left)
+                 .WithItems(
+                 menus.ToArray())
+                 .OnItemSelected(OnItemClickAsync)));
+        UIExecutor = executor;
+    }
 
+    private void Rerender(object? sender, EventArgs e)
+    {
+        Render();
+    }
+
+    private void Render()
+    {
         _ui =
             SplitGrid().Horizontal().TopPaneLength(new UIGridLength(80, UIGridUnitType.Pixel)).BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
             .WithTopPaneChild(_select).WithBottomPaneChild(
@@ -100,7 +104,8 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         {
             return;
         }
-        StepChanged?.Invoke(this, new StepChangedArgs(item.Value as string));
+        //StepChanged?.Invoke(this, new StepChangedArgs(Id,item.Value as string));
+        UIExecutor = ExecutorGenerator.Generate(item.Value as string);
 
     }
 
@@ -117,6 +122,8 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
     public event EventHandler? SpacingChanged;
     public event EventHandler? UIExecutorChanged;
     public event EventHandler<StepChangedArgs>? StepChanged;
+    private event EventHandler? RerenderTrigger;
+
 }
 public static partial class GUI
 {

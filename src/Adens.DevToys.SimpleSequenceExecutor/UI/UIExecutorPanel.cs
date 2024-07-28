@@ -1,17 +1,8 @@
 ﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
-using CommunityToolkit.Diagnostics;
 using DevToys.Api;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static DevToys.Api.GUI;
-using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
 using System.Text.Json;
+using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
+using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public interface IUIExecutorPanel : IUICard
 {
@@ -84,7 +75,7 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         _executors = new List<IUIExecutorWrapper>();
         foreach (var step in _bundle.Steps)
         {
-            var wrapper = Generate(step);
+            var wrapper = ExecutorGenerator.Generate(step);
             if (wrapper == null)
             {
                 continue;
@@ -117,22 +108,7 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         Bundle = a;
     }
 
-    private IUIExecutorWrapper? Generate(ExecutorStep step)
-    {
-        var executor = UIExecutorWrapper(EmptyExecutor());
-        switch (step.Type)
-        {
-            case Constants.TextDisplayExecutor:
-                executor= UIExecutorWrapper(TextDisplayExecutor());
-                break;
-            case Constants.EmptyExecutor:
-            default:
-                break;
-                ;
-        }
-        executor.StepChanged += Executor_StepChanged;
-        return executor;
-    }
+   
 
     private void Executor_StepChanged(object? sender, StepChangedArgs e)
     {
