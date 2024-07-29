@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 using static DevToys.Api.GUI;
 
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
-internal sealed class UIExecutorBundleItem : IUIListItem
+internal sealed class UIExecutorBundleItem :ViewModelBase,IUIListItem
 {
     private readonly Lazy<IUIElement> _ui;
     public IUIElement UIElement => _ui.Value;
     public object? Value { get; }
     private readonly SimpleSequenceExecutorGui _simpleSequenceExecutorGui;
     private readonly ISettingsProvider _settingsProvider;
-
+    private ExecutorBundle _current;
+    public ExecutorBundle Current
+    {
+        get => _current;
+        internal set => SetPropertyValue(ref _current, value, CurrentChanged);
+    }
     internal UIExecutorBundleItem(SimpleSequenceExecutorGui simpleSequenceExecutorGui, ExecutorBundle bundle, ISettingsProvider settingsProvider)
     {
         Guard.IsNotNull(simpleSequenceExecutorGui);
@@ -35,10 +40,9 @@ internal sealed class UIExecutorBundleItem : IUIListItem
 
     private  void onCurrentBundleClickAsync()
     {
-        var current = Value as ExecutorBundle;
-        _settingsProvider.SetSetting(SimpleSequenceExecutorGui.currentBundle, current);
+        _settingsProvider.SetSetting(SimpleSequenceExecutorGui.currentBundle, Current);
+        Current = (Value as ExecutorBundle);
     }
-
     private async ValueTask OnDeleteButtonClickAsync()
     {
         var bundles = _settingsProvider.GetSetting(SimpleSequenceExecutorGui.bundles);
@@ -52,4 +56,5 @@ internal sealed class UIExecutorBundleItem : IUIListItem
         //_simpleSequenceExecutorGui.BundleList.Items.Remove(this);
 
     }
+    public event EventHandler? CurrentChanged;
 }

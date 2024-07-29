@@ -23,25 +23,18 @@ public class StepChangedArgs : EventArgs
 }
 public interface IUIExecutorWrapper : IUICard
 {
+    ExecutorStep Step { get; }
     IUIExecutor UIExecutor { get; }
-    event EventHandler<StepChangedArgs>? StepChanged;
     event EventHandler? UIExecutorChanged;
+    event EventHandler? StepChanged;
     ValueTask ExecuteAsync();
 }
-internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
+internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
 {
-    private UIOrientation _orientation = UIOrientation.Horizontal;
-    private UISpacing _spacing = UISpacing.Small;
-    public UIOrientation Orientation
-    {
-        get => _orientation;
-        internal set => SetPropertyValue(ref _orientation, value, OrientationChanged);
-    }
-
-    public UISpacing Spacing
-    {
-        get => _spacing;
-        internal set => SetPropertyValue(ref _spacing, value, SpacingChanged);
+    private ExecutorStep _step;
+    public ExecutorStep Step {
+        get => _step;
+        internal set=>SetPropertyValue(ref _step,value,StepChanged);
     }
     private IUIElement _ui;
     public IUIElement UIElement
@@ -54,9 +47,10 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
     private IUIStack _select;
 
-    internal UIExecutorWrapper(string? id,IUIExecutor executor) : base(id)
+    internal UIExecutorStepWrapper(string? id, ExecutorStep step) : base(id)
     {
-        UIExecutorChanged += Rerender;
+        UIExecutor = ExecutorGenerator.Generate(step.Type);
+        StepChanged += Rerender;
 
         List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
 
@@ -71,7 +65,7 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
                  .WithItems(
                  menus.ToArray())
                  .OnItemSelected(OnItemClickAsync)));
-        UIExecutor = executor;
+        Step = step;
     }
 
     private void Rerender(object? sender, EventArgs e)
@@ -104,9 +98,9 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
         {
             return;
         }
-        //StepChanged?.Invoke(this, new StepChangedArgs(Id,item.Value as string));
+       
         UIExecutor = ExecutorGenerator.Generate(item.Value as string);
-
+        Step = new ExecutorStep { Id= Step.Id, Type= item.Value as string };
     }
 
     public async ValueTask ExecuteAsync()
@@ -117,23 +111,38 @@ internal class UIExecutorWrapper : UIElement, IUIExecutorWrapper
             await _executor.ExecuteAsync();
         }
     }
+    public event EventHandler? StepChanged;
+    private event EventHandler? RerenderTrigger;
 
+    #region 
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
     public event EventHandler? UIExecutorChanged;
-    public event EventHandler<StepChangedArgs>? StepChanged;
-    private event EventHandler? RerenderTrigger;
+  
+    private UIOrientation _orientation = UIOrientation.Horizontal;
+    private UISpacing _spacing = UISpacing.Small;
+    public UIOrientation Orientation
+    {
+        get => _orientation;
+        internal set => SetPropertyValue(ref _orientation, value, OrientationChanged);
+    }
 
+    public UISpacing Spacing
+    {
+        get => _spacing;
+        internal set => SetPropertyValue(ref _spacing, value, SpacingChanged);
+    }
+    #endregion
 }
 public static partial class GUI
 {
 
-    public static IUIExecutorWrapper UIExecutorWrapper(IUIExecutor executor)
+    public static IUIExecutorWrapper UIExecutorWrapper(ExecutorStep step)
     {
-        return UIExecutorWrapper(null, executor);
+        return UIExecutorWrapper(null, step);
     }
-    public static IUIExecutorWrapper UIExecutorWrapper(string? id, IUIExecutor executor)
+    public static IUIExecutorWrapper UIExecutorWrapper(string? id, ExecutorStep step)
     {
-        return new UIExecutorWrapper(id,executor);
+        return new UIExecutorStepWrapper(id, step);
     }
 }

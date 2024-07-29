@@ -11,6 +11,7 @@ namespace Adens.DevToys;
 [Name(PredefinedAdensToolGroupNames.Executors)]
 internal class ExecutorsGroup : GuiToolGroup
 {
+    [ImportingConstructor]
     internal ExecutorsGroup()
     {
         IconFontName = "FluentSystemIcons";

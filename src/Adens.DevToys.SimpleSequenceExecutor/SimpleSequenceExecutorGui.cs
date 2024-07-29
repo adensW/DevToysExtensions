@@ -46,20 +46,38 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
       });                              // Default value for the setting.
     private readonly IUIList _bundleList = List(nameof(_bundleList));
     internal IUIList BundleList => _bundleList;
-    private readonly IUIExecutorPanel _executorPanel = UIExecutorPanel(nameof(_executorPanel));
+    private readonly IUIExecutorPanel _executorPanel;
     [ImportingConstructor]
     public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
     {
         _settingsProvider = settingsProvider;
-        _settingsProvider.SettingChanged += OnSettingChanged;
+        //_settingsProvider.SettingChanged += OnSettingChanged;
+        _executorPanel = UIExecutorPanel(nameof(_executorPanel), _settingsProvider);
+        _executorPanel.BundleChanged += ExecutorPanel_BundleChanged;
         RefreshBundles(); RefreshCurrentBundles();
     }
 
-    private void OnSettingChanged(object? sender, SettingChangedEventArgs e)
+    private void ExecutorPanel_BundleChanged(object? sender, EventArgs e)
     {
-        RefreshBundles();
-        RefreshCurrentBundles();
+        var current = _executorPanel.Bundle;
+        _settingsProvider.SetSetting(currentBundle, current);
+        var Bundles = _settingsProvider.GetSetting(bundles);
+        foreach (var item in Bundles)
+        {
+            if (item.Name == current.Name)
+            {
+                item.Steps = current.Steps;
+            }
+        }
+        _settingsProvider.SetSetting(bundles,Bundles);
     }
+
+
+    //private void OnSettingChanged(object? sender, SettingChangedEventArgs e)
+    //{
+    //    RefreshBundles();
+    //    RefreshCurrentBundles();
+    //}
 
     private void RefreshCurrentBundles()
     {
@@ -153,7 +171,8 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
         var curbundles = _settingsProvider.GetSetting(bundles);
         foreach (var bundle in curbundles)
         {
-            _bundleList.Items.Add(new UIExecutorBundleItem(this,bundle,_settingsProvider));
+            var bundleItem = new UIExecutorBundleItem(this, bundle, _settingsProvider);
+            _bundleList.Items.Add(bundleItem);
         }
     }
 

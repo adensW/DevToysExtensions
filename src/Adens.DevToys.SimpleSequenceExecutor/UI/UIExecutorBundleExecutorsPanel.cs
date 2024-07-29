@@ -15,23 +15,16 @@ public interface IUIExecutorPanel : IUICard
     /// </summary>
     event EventHandler? BundleChanged;
 }
-internal class UIExecutorPanel : UIElement, IUIExecutorPanel
+internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
 {
-    private UIOrientation _orientation = UIOrientation.Horizontal;
-    private UISpacing _spacing = UISpacing.Small;
-    public UIOrientation Orientation
-    {
-        get => _orientation;
-        internal set => SetPropertyValue(ref _orientation, value, OrientationChanged);
-    }
-
-    public UISpacing Spacing
-    {
-        get => _spacing;
-        internal set => SetPropertyValue(ref _spacing, value, SpacingChanged);
-    }
+    private ISettingsProvider _settingProvider;
+  
 
     private ExecutorBundle? _bundle;
+    public ExecutorBundle? Bundle {
+        get => _bundle;
+        internal set => SetPropertyValue(ref _bundle, value, BundleChanged);
+    }
     private IUIElement? _ui;
     public IUIElement? UIElement { 
         get=>_ui;
@@ -44,11 +37,26 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
         get=>_signal;
         internal set => SetPropertyValue(ref _signal, value, ExecuteTrigger);
     }
-    internal UIExecutorPanel(string? id):base(id)
+    internal UIExecutorBundleExecutorsPanel(string? id, ISettingsProvider settingProvider) : base(id)
     {
         _button.OnClick(AddButtonClick);
         BundleChanged += RenderEventAction;
         ExecuteTrigger += Execute;
+        _settingProvider = settingProvider;
+        _settingProvider.SettingChanged += _settingProvider_SettingChanged;
+    }
+
+    private void _settingProvider_SettingChanged(object? sender, SettingChangedEventArgs e)
+    {
+        var currentBundle = _settingProvider.GetSetting(SimpleSequenceExecutorGui.currentBundle);
+        if (currentBundle == null)
+        {
+            return;
+        }
+        if(currentBundle.Name!=_bundle?.Name)
+        {
+            Bundle = currentBundle;
+        }
     }
 
     private void Execute(object? sender, EventArgs e)
@@ -62,6 +70,20 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
 
     private void RenderEventAction(object? sender, EventArgs e)
     {
+        if(_bundle==null)
+        {
+            return;
+        }
+        //updated data 
+        var bundles = _settingProvider.GetSetting(SimpleSequenceExecutorGui.bundles);
+        foreach (var item in bundles)
+        {
+            if(item.Name== _bundle.Name)
+            {
+               item.Steps = _bundle.Steps;
+            }
+        }
+        _settingProvider.SetSetting(SimpleSequenceExecutorGui.bundles, bundles);
         Render();
     }
 
@@ -80,7 +102,7 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
             {
                 continue;
             }
-
+            wrapper.StepChanged += Executor_StepChanged;
             _executors.Add(wrapper);
         }
         UIElement = Stack().Vertical().WithChildren(
@@ -104,56 +126,67 @@ internal class UIExecutorPanel : UIElement, IUIExecutorPanel
     private async ValueTask AddButtonClick()
     {
         var a = JsonSerializer.Deserialize< ExecutorBundle >(JsonSerializer.Serialize( _bundle));
-        a.Steps.Add(new ExecutorStep());
+        a.Steps.Add(new ExecutorStep() { 
+            Id = Guid.NewGuid().ToString(),
+            Type = Constants.EmptyExecutor
+        });
         Bundle = a;
     }
 
-   
-
-    private void Executor_StepChanged(object? sender, StepChangedArgs e)
+    private void Executor_StepChanged(object? sender, EventArgs e)
     {
-        _bundle.Steps.ForEach(z =>
+        var executorWrapper = (IUIExecutorWrapper)sender!;
+        foreach (var item in _bundle.Steps)
         {
-            if (z.Id == e.Id) {
-                z.Type = e.NewType;
+            if (item.Id == executorWrapper.Step.Id)
+            {
+                item.Type = executorWrapper.Step.Type;
+                item.Parameters = executorWrapper.Step.Parameters;
             }
         }
-        );
         var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
         Bundle = a;
 
     }
-
-    public ExecutorBundle? Bundle { 
-        get=> _bundle;
-        internal set => SetPropertyValue(ref _bundle, value, BundleChanged);
-        }
-   
+    private event EventHandler? ExecuteTrigger;
     public event EventHandler? BundleChanged;
+    #region
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
-    private event EventHandler? ExecuteTrigger;
+    private UIOrientation _orientation = UIOrientation.Horizontal;
+    private UISpacing _spacing = UISpacing.Small;
+    public UIOrientation Orientation
+    {
+        get => _orientation;
+        internal set => SetPropertyValue(ref _orientation, value, OrientationChanged);
+    }
 
+    public UISpacing Spacing
+    {
+        get => _spacing;
+        internal set => SetPropertyValue(ref _spacing, value, SpacingChanged);
+    }
+    #endregion
 
 }
 public static partial class GUI
 {
    
-    public static IUIExecutorPanel UIExecutorPanel()
+    public static IUIExecutorPanel UIExecutorPanel( ISettingsProvider settingsProvider)
     {
-        return UIExecutorPanel(null);
+        return UIExecutorPanel(null, settingsProvider);
     }
 
     
-    public static IUIExecutorPanel UIExecutorPanel(string? id)
+    public static IUIExecutorPanel UIExecutorPanel(string? id,ISettingsProvider settingsProvider)
     {
-        return new UIExecutorPanel(id);
+        return new UIExecutorBundleExecutorsPanel(id, settingsProvider);
     }
     
     public static IUIExecutorPanel Fill(this IUIExecutorPanel element, ExecutorBundle bundle)
     {
-        ((UIExecutorPanel)element).Bundle = bundle;
-        ((UIExecutorPanel)element).Render();
+        ((UIExecutorBundleExecutorsPanel)element).Bundle = bundle;
+        ((UIExecutorBundleExecutorsPanel)element).Render();
         return element;
     }
 }

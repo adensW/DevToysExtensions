@@ -12,12 +12,8 @@ public static class ExecutorGenerator
 {
     public static IUIExecutorWrapper? Generate(ExecutorStep step)
     {
-        var executor = UIExecutorWrapper(EmptyExecutor(Guid.NewGuid().ToString()));
-        var raw = Generate(step.Type);
-        if (raw != null)
-        {
-            executor= UIExecutorWrapper( raw);
-        }
+        var executor = UIExecutorWrapper( step);
+      
         return executor;
     }
     public static IUIExecutor? Generate(string type)
