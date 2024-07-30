@@ -19,7 +19,11 @@
     <Compile Remove="ExecutorsGroup.cs" />
   </ItemGroup>
 	<ItemGroup>
+    <PackageReference Include="DebounceThrottle" />
     <PackageReference Include="DevToys.Api" />
     <PackageReference Include="CliWrap" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Extensions\" />
 	</ItemGroup>
 </Project>

@@ -12,8 +12,11 @@ namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 [Export(typeof(IUIExecutor))]
 internal class UITextDisplayExecutor : UIElement, IUIExecutor
 {
+    public Dictionary<string, object> Parameters { get; set; }
+
+    public event EventHandler? ParametersChanged;
     public string Text { get;  set; } = string.Empty;
-    public UITextDisplayExecutor(string? id) : base(id)
+    public UITextDisplayExecutor(string? id, Dictionary<string, object> parameters) : base(id)
     {
         UIElement = Label().Text("111");
     }
@@ -30,13 +33,13 @@ internal class UITextDisplayExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor TextDisplayExecutor()
+    public static IUIExecutor TextDisplayExecutor(Dictionary<string, object> parameters)
     {
-        return TextDisplayExecutor(null);
+        return TextDisplayExecutor(null, parameters);
     }
-    public static IUIExecutor TextDisplayExecutor(string? id)
+    public static IUIExecutor TextDisplayExecutor(string? id, Dictionary<string, object> parameters)
     {
-        return new UITextDisplayExecutor(id);
+        return new UITextDisplayExecutor(id,parameters);
     }
 
 }

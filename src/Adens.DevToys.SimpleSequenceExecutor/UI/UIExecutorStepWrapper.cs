@@ -46,10 +46,11 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
         get=> _executor;
         internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
     private IUIStack _select;
-
+    private IUISelectDropDownList _selectDropdownList;
     internal UIExecutorStepWrapper(string? id, ExecutorStep step) : base(id)
     {
-        UIExecutor = ExecutorGenerator.Generate(step.Type);
+        UIExecutor = ExecutorGenerator.Generate(step.Type,step.Parameters);
+        UIExecutor.ParametersChanged += OnParametersChanged;
         StepChanged += Rerender;
 
         List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
@@ -58,14 +59,23 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
         {
             menus.Add(Item(text: item, value: item));
         }
-        _select =
-         Stack().Horizontal().NoSpacing().WithChildren(
-             Card(Label().Style(UILabelStyle.Body).Text("Select a executor:")), Card(SelectDropDownList(Guid.NewGuid().ToString())
+        _selectDropdownList = SelectDropDownList(Guid.NewGuid().ToString())
                  .AlignHorizontally(UIHorizontalAlignment.Left)
                  .WithItems(
                  menus.ToArray())
-                 .OnItemSelected(OnItemClickAsync)));
+                 .Select(Array.IndexOf(Constants.Executors, step.Type))
+                 .OnItemSelected(OnItemClickAsync);
+        _select =
+         Stack().Horizontal().NoSpacing().WithChildren(
+             Card(Label().Style(UILabelStyle.Body).Text("Select a executor:")), Card(_selectDropdownList));
         Step = step;
+
+    }
+
+    private void OnParametersChanged(object? sender, EventArgs e)
+    {
+        Step = new ExecutorStep { Id = Step.Id, Type = Step.Type,Parameters= ((IUIExecutor)sender).Parameters };
+
     }
 
     private void Rerender(object? sender, EventArgs e)
@@ -75,6 +85,7 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
 
     private void Render()
     {
+        _selectDropdownList.Select(Array.IndexOf(Constants.Executors, Step.Type));
         _ui =
             SplitGrid().Horizontal().TopPaneLength(new UIGridLength(80, UIGridUnitType.Pixel)).BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
             .WithTopPaneChild(_select).WithBottomPaneChild(
@@ -99,7 +110,9 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
             return;
         }
        
-        UIExecutor = ExecutorGenerator.Generate(item.Value as string);
+        UIExecutor = ExecutorGenerator.Generate(item.Value as string,new Dictionary<string, object>());
+        UIExecutor.ParametersChanged += OnParametersChanged;
+
         Step = new ExecutorStep { Id= Step.Id, Type= item.Value as string };
     }
 

@@ -13,35 +13,24 @@ internal sealed class UIExecutorBundleItem :ViewModelBase,IUIListItem
 {
     private readonly Lazy<IUIElement> _ui;
     public IUIElement UIElement => _ui.Value;
-    public object? Value { get; }
+    public object? Value { get =>_current; }
     private readonly SimpleSequenceExecutorGui _simpleSequenceExecutorGui;
     private readonly ISettingsProvider _settingsProvider;
     private ExecutorBundle _current;
-    public ExecutorBundle Current
-    {
-        get => _current;
-        internal set => SetPropertyValue(ref _current, value, CurrentChanged);
-    }
+ 
     internal UIExecutorBundleItem(SimpleSequenceExecutorGui simpleSequenceExecutorGui, ExecutorBundle bundle, ISettingsProvider settingsProvider)
     {
         Guard.IsNotNull(simpleSequenceExecutorGui);
         _simpleSequenceExecutorGui = simpleSequenceExecutorGui;
-        Value = bundle;
-
+        _current = bundle;
         _ui = new(
               Stack().Horizontal()
               .WithChildren(
-                  Button().Text(bundle.Name).OnClick(onCurrentBundleClickAsync),
+                  Label().Text(_current.Name),
                   Button().Icon("FluentSystemIcons", '\uF34C').OnClick(OnDeleteButtonClickAsync))
 
             );
         _settingsProvider = settingsProvider;
-    }
-
-    private  void onCurrentBundleClickAsync()
-    {
-        _settingsProvider.SetSetting(SimpleSequenceExecutorGui.currentBundle, Current);
-        Current = (Value as ExecutorBundle);
     }
     private async ValueTask OnDeleteButtonClickAsync()
     {

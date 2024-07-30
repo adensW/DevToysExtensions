@@ -25,10 +25,11 @@ namespace Adens.DevToys.SimpleSequenceExecutor;
     LongDisplayTitleResourceName = nameof(SimpleSequenceExecutor.LongDisplayTitle),
     DescriptionResourceName = nameof(SimpleSequenceExecutor.Description),
     AccessibleNameResourceName = nameof(SimpleSequenceExecutor.AccessibleName))]
-internal sealed class SimpleSequenceExecutorGui : IGuiTool
+internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
 {
   
     private UIToolView? _view;
+    #region stored settings
     private readonly ISettingsProvider _settingsProvider;
     public static readonly SettingDefinition<List<ExecutorBundle>> bundles // Define a setting.
     = new(
@@ -44,24 +45,26 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
       deserialize: (str) => {
           return JsonSerializer.Deserialize<ExecutorBundle>(str);
       });                              // Default value for the setting.
-    private readonly IUIList _bundleList = List(nameof(_bundleList));
-    internal IUIList BundleList => _bundleList;
-    private readonly IUIExecutorPanel _executorPanel;
-    [ImportingConstructor]
-    public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
-    {
-        _settingsProvider = settingsProvider;
-        //_settingsProvider.SettingChanged += OnSettingChanged;
-        _executorPanel = UIExecutorPanel(nameof(_executorPanel), _settingsProvider);
-        _executorPanel.BundleChanged += ExecutorPanel_BundleChanged;
-        RefreshBundles(); RefreshCurrentBundles();
-    }
+    #endregion
+    #region save logic
+    public List<ExecutorBundle> _bundles;
+    public List<ExecutorBundle> Bundles { 
+        get=>_bundles;
+        internal set => SetPropertyValue(ref _bundles, value, (sender,args) => { 
+            _settingsProvider.SetSetting(bundles, value);
+            RefreshBundles();
 
+        });
+    }
+    private ExecutorBundle _currentBundle;
+    public ExecutorBundle CurrentBundle { get=>_currentBundle; internal set =>SetPropertyValue(ref _currentBundle, value, (sender,args) => {
+        _settingsProvider.SetSetting(currentBundle, value);
+    }); }
     private void ExecutorPanel_BundleChanged(object? sender, EventArgs e)
     {
         var current = _executorPanel.Bundle;
-        _settingsProvider.SetSetting(currentBundle, current);
-        var Bundles = _settingsProvider.GetSetting(bundles);
+        var c = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(current));
+        CurrentBundle = c;
         foreach (var item in Bundles)
         {
             if (item.Name == current.Name)
@@ -69,22 +72,63 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
                 item.Steps = current.Steps;
             }
         }
-        _settingsProvider.SetSetting(bundles,Bundles);
+        var bs = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
+        Bundles = bs;
+    }
+    #endregion
+    private readonly IUIList _bundleList = List(nameof(_bundleList));
+    internal IUIList BundleList => _bundleList;
+    private readonly IUIExecutorPanel _executorPanel;
+    [ImportingConstructor]
+    public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
+    {
+        _settingsProvider = settingsProvider;
+
+        _currentBundle = settingsProvider.GetSetting(currentBundle);
+        _bundles = settingsProvider.GetSetting(bundles);
+
+        //_settingsProvider.SettingChanged += OnSettingChanged;
+        _executorPanel = UIExecutorPanel(nameof(_executorPanel), _settingsProvider);
+        _executorPanel.BundleChanged += ExecutorPanel_BundleChanged;
+        BundleList.SelectedItemChanged+=OnBundleSelected;
+        BundleList.Select(Bundles.IndexOf(CurrentBundle));
+        RefreshBundles(); 
+        RefreshCurrentBundles();
     }
 
+    private void OnBundleSelected(object? sender, EventArgs e)
+    {
+        if (sender == null||((IUIList)sender).SelectedItem==null|| ((IUIList)sender).SelectedItem?.Value == null)
+        {
+            return;
+        }
+        CurrentBundle = ((IUIList)sender).SelectedItem.Value as ExecutorBundle;
+    }
 
-    //private void OnSettingChanged(object? sender, SettingChangedEventArgs e)
+    //private async ValueTask OnBundleSelected(IUIListItem? item)
     //{
-    //    RefreshBundles();
-    //    RefreshCurrentBundles();
+    //    if(item== null)
+    //    {
+    //        return;
+    //    }
+    //    var selecteditem = BundleList.SelectedItem;
+    //    CurrentBundle = item.Value as ExecutorBundle;
     //}
 
     private void RefreshCurrentBundles()
     {
-        var current = _settingsProvider.GetSetting(currentBundle);
-        _executorPanel.Fill(current);
+        _executorPanel.Fill(CurrentBundle);
     }
-
+    private void RefreshBundles()
+    {
+        _bundleList.Items.Clear();
+        foreach (var bundle in Bundles)
+        {
+            var bundleItem = new UIExecutorBundleItem(this, bundle, _settingsProvider);
+            _bundleList.Items.Add(bundleItem);
+        }
+        _bundleList.Select(Bundles.IndexOf(CurrentBundle));
+    }
     public UIToolView View
     {
         get
@@ -113,7 +157,7 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
             return _view;
         }
     }
-
+#region AddBundle
     private async ValueTask OpenAddBundleDialogClick()
     {
         UIDialog dialog = await OpenCustomDialogAsync(dismissible: true);
@@ -156,25 +200,13 @@ internal sealed class SimpleSequenceExecutorGui : IGuiTool
     }
     private async ValueTask AddExecutorBundleClick()
     {
-        var curbundles = _settingsProvider.GetSetting(bundles);
-        curbundles.Add(new ExecutorBundle(_dialogNameInput.Text,_dialogDescriptionInput.Text));
-        _settingsProvider.SetSetting(bundles, curbundles);
-        RefreshBundles();
+        Bundles.Add(new ExecutorBundle(_dialogNameInput.Text, _dialogDescriptionInput.Text));
+        Bundles = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
         ResetDialog();
         _view.CurrentOpenedDialog?.Close();
-
-
     }
-    private void RefreshBundles()
-    {
-        _bundleList.Items.Clear();
-        var curbundles = _settingsProvider.GetSetting(bundles);
-        foreach (var bundle in curbundles)
-        {
-            var bundleItem = new UIExecutorBundleItem(this, bundle, _settingsProvider);
-            _bundleList.Items.Add(bundleItem);
-        }
-    }
+#endregion
+   
 
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {

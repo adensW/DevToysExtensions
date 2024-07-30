@@ -29,6 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{43221405-036
 		doc\SimpleSequenceExecutor.md = doc\SimpleSequenceExecutor.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F660621-D274-47A8-99DB-B9BCCA52AEF3}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Packages.props = src\Directory.Packages.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +65,7 @@ Global
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{170E74DB-3102-4A7F-9401-36F53C824D8A} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{7609061D-8275-4014-937F-B29BC079B45C} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
+		{2F660621-D274-47A8-99DB-B9BCCA52AEF3} = {425E32B5-032B-4BD5-BFF7-9B09B59E1068}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE85D6B2-DF1A-4DCE-A204-81FAF65DC888}

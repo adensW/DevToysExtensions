@@ -12,8 +12,11 @@ namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 [Export(typeof(IUIExecutor))]
 internal class UIEmptyExecutor : UIElement, IUIExecutor
 {
+    public Dictionary<string, object> Parameters { get; set; }
+
+    public event EventHandler? ParametersChanged;
     public string Text { get;  set; } = string.Empty;
-    public UIEmptyExecutor(string? id) : base(id)
+    public UIEmptyExecutor(string? id, Dictionary<string, object> parameters) : base(id)
     {
         UIElement = Label().Text("Empty");
     }
@@ -21,6 +24,7 @@ internal class UIEmptyExecutor : UIElement, IUIExecutor
     public bool CanExecute => false;
 
     public IUIElement UIElement { get; }
+ 
 
     public ValueTask ExecuteAsync()
     {
@@ -30,15 +34,15 @@ internal class UIEmptyExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor EmptyExecutor()
+    public static IUIExecutor EmptyExecutor(Dictionary<string, object> parameters)
     {
-        return EmptyExecutor(null);
+        return EmptyExecutor(null, parameters);
     }
 
 
-    public static IUIExecutor EmptyExecutor(string? id)
+    public static IUIExecutor EmptyExecutor(string? id, Dictionary<string, object> parameters)
     {
-        return new UIEmptyExecutor(id);
+        return new UIEmptyExecutor(id,parameters);
     }
     public static IUIExecutor Text(this IUIExecutor element, string text)
     {

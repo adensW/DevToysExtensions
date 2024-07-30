@@ -16,20 +16,20 @@ public static class ExecutorGenerator
       
         return executor;
     }
-    public static IUIExecutor? Generate(string type)
+    public static IUIExecutor? Generate(string type, Dictionary<string, object> parameters)
     {
         IUIExecutor executor = null;
         switch (type)
         {
             case Constants.TextDisplayExecutor:
-                executor = TextDisplayExecutor(Guid.NewGuid().ToString());
+                executor = TextDisplayExecutor(Guid.NewGuid().ToString(), parameters);
                 break;
             case Constants.CliExecutor:
-                executor =CliExecutor(Guid.NewGuid().ToString());
+                executor =CliExecutor(Guid.NewGuid().ToString(), parameters);
                 break;
             case Constants.EmptyExecutor:
             default:
-                executor = EmptyExecutor(Guid.NewGuid().ToString());
+                executor = EmptyExecutor(Guid.NewGuid().ToString(), parameters);
                 break;
                 ;
         }

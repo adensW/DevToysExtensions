@@ -74,16 +74,7 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
         {
             return;
         }
-        //updated data 
-        var bundles = _settingProvider.GetSetting(SimpleSequenceExecutorGui.bundles);
-        foreach (var item in bundles)
-        {
-            if(item.Name== _bundle.Name)
-            {
-               item.Steps = _bundle.Steps;
-            }
-        }
-        _settingProvider.SetSetting(SimpleSequenceExecutorGui.bundles, bundles);
+     
         Render();
     }
 
@@ -144,6 +135,16 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
                 item.Parameters = executorWrapper.Step.Parameters;
             }
         }
+        //updated data 
+        var bundles = _settingProvider.GetSetting(SimpleSequenceExecutorGui.bundles);
+        foreach (var item in bundles)
+        {
+            if (item.Name == _bundle.Name)
+            {
+                item.Steps = _bundle.Steps;
+            }
+        }
+        _settingProvider.SetSetting(SimpleSequenceExecutorGui.bundles, bundles);
         var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
         Bundle = a;
 
