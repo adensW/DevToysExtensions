@@ -3,7 +3,7 @@
   <PropertyGroup>
      <TargetFrameworks>$(NetCore)</TargetFrameworks>
     <PackageId>Adens.DevToys.Shared</PackageId>
-    <Version>1.0.2</Version>
+    <Version>0.0.1-alpha.1</Version>
     <Title>Adens.DevToys.Shared</Title>
     <Description>Adens.DevToys.Shared</Description>
     <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
@@ -26,4 +26,13 @@
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
 	</ItemGroup>
+	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)\**">
+				<Pack>true</Pack>
+				<PackagePath>lib\net8.0</PackagePath>
+			</None>
+		</ItemGroup>
+	</Target>
 </Project>

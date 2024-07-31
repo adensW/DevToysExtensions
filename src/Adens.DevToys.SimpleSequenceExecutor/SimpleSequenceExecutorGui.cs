@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static DevToys.Api.GUI;
 using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
+using System.Reflection.Metadata;
 
 namespace Adens.DevToys.SimpleSequenceExecutor;
 
@@ -33,11 +34,20 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
     private readonly ISettingsProvider _settingsProvider;
     public static readonly SettingDefinition<List<ExecutorBundle>> bundles // Define a setting.
     = new(
-        name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(bundles)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#if DEBUG
+        name: $"Debug.{nameof(SimpleSequenceExecutorGui)}.{nameof(bundles)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#else
+    name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(bundles)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#endif
         defaultValue: new List<ExecutorBundle>());                              // Default value for the setting.
     public static readonly SettingDefinition<ExecutorBundle?> currentBundle // Define a setting.
   = new(
-      name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(currentBundle)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#if DEBUG
+       name: $"Debug.{nameof(SimpleSequenceExecutorGui)}.{nameof(currentBundle)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#else
+   name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(currentBundle)}", // Unique name for the setting. Use the tool name to avoid conflicts.
+#endif
+
       defaultValue: null,
       serialize: (obj) => { 
           return JsonSerializer.Serialize(obj);
@@ -45,7 +55,7 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
       deserialize: (str) => {
           return JsonSerializer.Deserialize<ExecutorBundle>(str);
       });                              // Default value for the setting.
-    #endregion
+#endregion
     #region save logic
     public List<ExecutorBundle> _bundles;
     public List<ExecutorBundle> Bundles { 
@@ -76,8 +86,11 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
         Bundles = bs;
     }
     #endregion
-    private readonly IUIList _bundleList = List(nameof(_bundleList));
-    internal IUIList BundleList => _bundleList;
+   
+    //private readonly IUIList _bundleList = List(nameof(_bundleList));
+    //internal IUIList BundleList => _bundleList;
+    //private readonly IUIDataGrid BundleList = DataGrid().Extendable().AllowSelectItem().WithColumns("name(double click this)", "operate");
+    private readonly IUIStack BundleList = Stack().Vertical();
     private readonly IUIExecutorPanel _executorPanel;
     [ImportingConstructor]
     public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
@@ -90,29 +103,30 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
         //_settingsProvider.SettingChanged += OnSettingChanged;
         _executorPanel = UIExecutorPanel(nameof(_executorPanel), _settingsProvider);
         _executorPanel.BundleChanged += ExecutorPanel_BundleChanged;
-        BundleList.SelectedItemChanged+=OnBundleSelected;
-        BundleList.Select(Bundles.IndexOf(CurrentBundle));
+        //BundleList.SelectedItemChanged+=OnBundleSelected;
+        //BundleList.SelectedRowChanged+=OnBundleSelected;
+        //BundleList.Select(Bundles.IndexOf(CurrentBundle));
         RefreshBundles(); 
         RefreshCurrentBundles();
     }
 
-    private void OnBundleSelected(object? sender, EventArgs e)
-    {
-        if (sender == null||((IUIList)sender).SelectedItem==null|| ((IUIList)sender).SelectedItem?.Value == null)
-        {
-            return;
-        }
-        CurrentBundle = ((IUIList)sender).SelectedItem.Value as ExecutorBundle;
-    }
-
-    //private async ValueTask OnBundleSelected(IUIListItem? item)
+    //private void OnBundleSelected(object? sender, EventArgs e)
     //{
-    //    if(item== null)
+    //    if (sender == null || ((IUIDataGrid)sender).SelectedRow == null || ((IUIDataGrid)sender).SelectedRow?.Value == null)
     //    {
     //        return;
     //    }
-    //    var selecteditem = BundleList.SelectedItem;
-    //    CurrentBundle = item.Value as ExecutorBundle;
+    //    CurrentBundle = ((IUIDataGrid)sender).SelectedRow.Value as ExecutorBundle;
+    //}
+
+    //private async ValueTask OnBundleSelected(IUIDataGridRow? selectedRow)
+    //{
+    //    if (selectedRow == null)
+    //    {
+    //        return;
+    //    }
+    //    CurrentBundle = selectedRow.Value as ExecutorBundle;
+
     //}
 
     private void RefreshCurrentBundles()
@@ -121,13 +135,41 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
     }
     private void RefreshBundles()
     {
-        _bundleList.Items.Clear();
+        //BundleList.Rows.Clear();
+        ////_bundleList.Items.Clear();
+        List<IUIElement> bundleItems = new List<IUIElement>();
         foreach (var bundle in Bundles)
         {
-            var bundleItem = new UIExecutorBundleItem(this, bundle, _settingsProvider);
-            _bundleList.Items.Add(bundleItem);
+            bundleItems.Add(SplitGrid()
+                        .Vertical()
+                        .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
+                        .RightPaneLength(new UIGridLength(50, UIGridUnitType.Pixel))
+                        .WithLeftPaneChild(
+                            Button().Text(bundle.Name).OnClick(() => { SelectBundle(bundle); })
+                        )
+                        .WithRightPaneChild(
+                            Button().Icon("FluentSystemIcons", '\uF34C').OnClick(() => { DeleteBundle(bundle); })
+                        )
+                
+
+            );
         }
-        _bundleList.Select(Bundles.IndexOf(CurrentBundle));
+        BundleList.WithChildren(bundleItems.ToArray());
+        //_bundleList.Select(Bundles.IndexOf(CurrentBundle));
+    }
+    private void SelectBundle(ExecutorBundle bundle)
+    {
+        CurrentBundle = bundle;
+    }
+    private void DeleteBundle(ExecutorBundle bundle)
+    {
+        //if (bundle == CurrentBundle)
+        //{
+        //    CurrentBundle =null;
+        //}
+        Bundles.Remove(bundle);
+
+        Bundles = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
     }
     public UIToolView View
     {
@@ -140,16 +182,20 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
                 .TopPaneLength(new UIGridLength(100, UIGridUnitType.Pixel))
                 .BottomPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
                 .WithTopPaneChild(
-                     Button().Text("new")
-                     .OnClick(OpenAddBundleDialogClick)
+                     Stack().Horizontal().WithChildren(
+                        Button().Text("new").OnClick(OpenAddBundleDialogClick)
+                        //Button().Text("export").OnClick(ExportButtonClick),
+                        //Button().Text("import").OnClick(OpenImportDialogClick),
+                        //Button().Icon("FluentSystemIcons", '\uF34C').OnClick(OpenSettingDialogClick)
                      )
+                 )
                 .WithBottomPaneChild(
 
                     SplitGrid()
                         .Vertical()
                         .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
                         .RightPaneLength(new UIGridLength(2, UIGridUnitType.Fraction))
-                        .WithLeftPaneChild(_bundleList)
+                        .WithLeftPaneChild(BundleList)
                         .WithRightPaneChild(
                         _executorPanel
                         ))
