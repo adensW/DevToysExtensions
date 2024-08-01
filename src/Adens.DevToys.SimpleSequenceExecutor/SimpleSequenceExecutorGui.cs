@@ -16,6 +16,18 @@ namespace Adens.DevToys.SimpleSequenceExecutor;
 
 [Export(typeof(IGuiTool))]
 [Name("SimpleSequenceExecutor")]                                                         // A unique, internal name of the tool.
+#if DEBUG
+[ToolDisplayInformation(
+    IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
+    IconGlyph = '\uE607',                                                     // An icon that represents a pizza
+    GroupName = PredefinedCommonToolGroupNames.Generators,                    // The group in which the tool will appear in the side bar.
+    ResourceManagerAssemblyIdentifier = nameof(SimpleSequenceExecutorResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
+    ResourceManagerBaseName = "Adens.DevToys.SimpleSequenceExecutor.SimpleSequenceExecutor",                      // The full name (including namespace) of the resource file containing our localized texts
+    ShortDisplayTitleResourceName = nameof(SimpleSequenceExecutor.WIPShortDisplayTitle),    // The name of the resource to use for the short display title
+    LongDisplayTitleResourceName = nameof(SimpleSequenceExecutor.WIPLongDisplayTitle),
+    DescriptionResourceName = nameof(SimpleSequenceExecutor.Description),
+    AccessibleNameResourceName = nameof(SimpleSequenceExecutor.AccessibleName))]
+#else
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
     IconGlyph = '\uE607',                                                     // An icon that represents a pizza
@@ -26,6 +38,7 @@ namespace Adens.DevToys.SimpleSequenceExecutor;
     LongDisplayTitleResourceName = nameof(SimpleSequenceExecutor.LongDisplayTitle),
     DescriptionResourceName = nameof(SimpleSequenceExecutor.Description),
     AccessibleNameResourceName = nameof(SimpleSequenceExecutor.AccessibleName))]
+#endif
 internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
 {
   

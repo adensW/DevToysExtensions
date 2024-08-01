@@ -131,5 +131,23 @@ namespace Adens.DevToys.SimpleSequenceExecutor {
                 return ResourceManager.GetString("ShortDisplayTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 (WIP)Simple Sequence Executor 的本地化字符串。
+        /// </summary>
+        internal static string WIPLongDisplayTitle {
+            get {
+                return ResourceManager.GetString("WIPLongDisplayTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 (WIP)Simple Sequence Executor 的本地化字符串。
+        /// </summary>
+        internal static string WIPShortDisplayTitle {
+            get {
+                return ResourceManager.GetString("WIPShortDisplayTitle", resourceCulture);
+            }
+        }
     }
 }

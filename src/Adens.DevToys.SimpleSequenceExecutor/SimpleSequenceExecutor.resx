@@ -141,4 +141,10 @@
   <data name="ShortDisplayTitle" xml:space="preserve">
     <value>Simple Sequence Executor</value>
   </data>
+  <data name="WIPLongDisplayTitle" xml:space="preserve">
+    <value>(WIP)Simple Sequence Executor</value>
+  </data>
+  <data name="WIPShortDisplayTitle" xml:space="preserve">
+    <value>(WIP)Simple Sequence Executor</value>
+  </data>
 </root>
