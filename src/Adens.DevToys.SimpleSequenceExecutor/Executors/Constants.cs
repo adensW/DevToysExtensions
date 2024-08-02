@@ -10,13 +10,12 @@ public static class Constants
     public const string EmptyExecutor = "Empty";
     public const string TextDisplayExecutor = "TextDisplay";
     public const string CliExecutor = "Cli";
+    public const string WriteFileExecutor = "WriteFile";
     public static string[] Executors = [
        EmptyExecutor,
-#if DEBUG
-
        TextDisplayExecutor,
-#endif
         CliExecutor,
+        WriteFileExecutor
 
         ];
 }

@@ -30,13 +30,14 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
         get=>_ui;
         internal set => _ui=value;
     }
-    private List<IUIExecutorWrapper> _executors ;
+    private List<IUIExecutorWrapper> _executors =new List<IUIExecutorWrapper>();
     private int _signal = 0;
     public int Signal
     {
         get=>_signal;
         internal set => SetPropertyValue(ref _signal, value, ExecuteTrigger);
     }
+    private Dictionary<string, object> RuntimeVariables { get; set; } = new Dictionary<string, object>();
     internal UIExecutorBundleExecutorsPanel(string? id, ISettingsProvider settingProvider) : base(id)
     {
         _button.OnClick(AddButtonClick);
@@ -64,7 +65,7 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
        
         foreach (var item in _executors)
         {
-              item.ExecuteAsync();
+             var result = item.ExecuteAsync(RuntimeVariables);
         }
     }
 
@@ -85,7 +86,8 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
         {
             return;
         }
-        _executors = new List<IUIExecutorWrapper>();
+        UIElement = null;
+        _executors.Clear();
         foreach (var step in _bundle.Steps)
         {
             var wrapper = ExecutorGenerator.Generate(step);
@@ -94,19 +96,90 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
                 continue;
             }
             wrapper.StepChanged += Executor_StepChanged;
+            wrapper.OnAddAfterClicked += OnAddAfterClicked;
+            wrapper.OnMoveUpClicked += OnMoveUpClicked;
+            wrapper.OnDeleteClicked += OnDeleteClicked;
+            wrapper.OnMoveDownClicked += OnMoveDownClicked;
+            wrapper.OnAddBeforeClicked += OnAddBeforeClicked;
             _executors.Add(wrapper);
         }
-        UIElement = Stack().Vertical().WithChildren(
-            Stack().Horizontal().WithChildren(
+        UIElement = Stack(Guid.NewGuid().ToString()).Vertical().WithChildren(
+            Stack(Guid.NewGuid().ToString()).Horizontal().WithChildren(
             Label().Text(_bundle.Name),
             Button().Text("Execute").OnClick(OnExecuteClick)
 
             ),
-            Stack().Vertical().WithChildren(
+            Stack(Guid.NewGuid().ToString()).Vertical().WithChildren(
             _executors.ToArray()
                 ),
             _button
             );
+    }
+
+    private void OnAddBeforeClicked(object? sender, ExecutorStepArgs e)
+    {
+        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        if (index < 0) {
+            index = 0;
+        }
+        a.Steps.Insert(index, new ExecutorStep() { 
+            Id = Guid.NewGuid().ToString(),
+            Type = Constants.EmptyExecutor
+        });
+        Bundle = a;
+    }
+
+    private void OnMoveDownClicked(object? sender, ExecutorStepArgs e)
+    {
+        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        if (index >= 0 && index < a.Steps.Count - 1)
+        {
+            // 将该项与前一项交换位置
+            ExecutorStep temp = a.Steps[index];
+            a.Steps[index] = a.Steps[index + 1];
+            a.Steps[index + 1] = temp;
+            Bundle = a;
+        }
+    }
+
+    private void OnDeleteClicked(object? sender, ExecutorStepArgs e)
+    {
+        _bundle.Steps.Remove(e.Step);
+        Bundle = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+
+    }
+
+    private void OnMoveUpClicked(object? sender, ExecutorStepArgs e)
+    {
+
+        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        if (index > 0 && index < a.Steps.Count)
+        {
+            // 将该项与前一项交换位置
+            ExecutorStep temp = a.Steps[index];
+            a.Steps[index] = a.Steps[index - 1];
+            a.Steps[index - 1] = temp;
+            Bundle = a;
+        }
+    }
+
+    private void OnAddAfterClicked(object? sender, ExecutorStepArgs e)
+    {
+        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
+        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        if (index < 0)
+        {
+            index = 0;
+        }
+        a.Steps.Insert(index+1, new ExecutorStep() { 
+            Id = Guid.NewGuid().ToString(),
+            Type = Constants.EmptyExecutor
+        });
+        Bundle = a;
+
     }
 
     private async ValueTask OnExecuteClick()

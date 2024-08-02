@@ -1,4 +1,5 @@
-﻿using CliWrap;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using CliWrap;
 using DebounceThrottle;
 using DevToys.Api;
 using OneOf.Types;
@@ -93,7 +94,7 @@ internal class UICliExecutor : UIElement, IUIExecutor
 
     public IUIElement UIElement { get; }
 
-    public async ValueTask ExecuteAsync()
+    public async ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string, object> runtimeVariables)
     {
         var command = Cli.Wrap(ExecuteblePath);
         if (!string.IsNullOrWhiteSpace(Arguments))
@@ -108,7 +109,7 @@ internal class UICliExecutor : UIElement, IUIExecutor
 
         var result = await command
          .ExecuteAsync();
-
+        return ExecutedResult.Create(runtimeVariables);
     }
 }
 public static partial class GUI

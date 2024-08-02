@@ -26,9 +26,10 @@ internal class UIEmptyExecutor : UIElement, IUIExecutor
     public IUIElement UIElement { get; }
  
 
-    public ValueTask ExecuteAsync()
+    public ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string, object> runtimeVariables)
     {
-        return ValueTask.CompletedTask;
+
+        return ValueTask.FromResult(ExecutedResult.Create(runtimeVariables));
     }
 }
 public static partial class GUI

@@ -12,7 +12,7 @@ public static class ExecutorGenerator
 {
     public static IUIExecutorWrapper? Generate(ExecutorStep step)
     {
-        var executor = UIExecutorWrapper( step);
+        var executor = UIExecutorWrapper(Guid.NewGuid().ToString(), step);
       
         return executor;
     }
@@ -26,6 +26,9 @@ public static class ExecutorGenerator
                 break;
             case Constants.CliExecutor:
                 executor =CliExecutor(Guid.NewGuid().ToString(), parameters);
+                break;
+            case Constants.WriteFileExecutor:
+                executor = WriteFileExecutor(Guid.NewGuid().ToString(), parameters);
                 break;
             case Constants.EmptyExecutor:
             default:

@@ -1,4 +1,5 @@
-﻿using DevToys.Api;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using DevToys.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,5 @@ public interface IUIExecutor : IUICard
     public event EventHandler? ParametersChanged;
     Dictionary<string, object> Parameters { get; set; }
     bool CanExecute { get; }
-    ValueTask ExecuteAsync();
+    ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string, object> runtimeVariables);
 }
