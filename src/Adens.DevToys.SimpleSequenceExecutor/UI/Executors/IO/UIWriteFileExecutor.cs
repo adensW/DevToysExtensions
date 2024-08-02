@@ -119,7 +119,7 @@ internal class UIWriteFileExecutor : UIElement, IUIExecutor
 
         using (FileStream fs = new FileStream(Path, FileMode.Create))
         {
-            string val = "";
+            string val = Value;
             if(ValueGainFromParameters)
             {
                 val = runtimeVariables.GetValueOrDefault(Value, "") as string;
