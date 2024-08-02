@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using static DevToys.Api.GUI;
 using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
 using System.Reflection.Metadata;
+using SQLite;
 
 namespace Adens.DevToys.SimpleSequenceExecutor;
 
@@ -99,7 +100,22 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
         Bundles = bs;
     }
     #endregion
-   
+    #region sqlite
+    private void CheckSqliteInit()
+    {
+        string appFolder = AppContext.BaseDirectory;
+        var pluginFolder = Path.Combine(appFolder!, "Plugins", "Adens.DevToys.SimpleSequenceExecutor");
+        if (!Directory.Exists(pluginFolder))
+        {
+            Directory.CreateDirectory(pluginFolder);
+        }
+        var databasePath = Path.Combine(pluginFolder, "SimpleSequenceExecutor.db");
+        using var db = new SQLiteConnection(databasePath);
+        db.CreateTable<Bundle>();
+        db.CreateTable<BundleStep>();
+        db.CreateTable<BundleStepParameter>();
+    }
+    #endregion
     //private readonly IUIList _bundleList = List(nameof(_bundleList));
     //internal IUIList BundleList => _bundleList;
     //private readonly IUIDataGrid BundleList = DataGrid().Extendable().AllowSelectItem().WithColumns("name(double click this)", "operate");
@@ -108,6 +124,7 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
     [ImportingConstructor]
     public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
     {
+        CheckSqliteInit();
         _settingsProvider = settingsProvider;
 
         _currentBundle = settingsProvider.GetSetting(currentBundle);

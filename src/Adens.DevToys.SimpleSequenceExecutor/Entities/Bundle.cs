@@ -1,18 +1,21 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Adens.DevToys.SimpleSequenceExecutor.Entities;
-public class ExecutorBundle
+public class Bundle
 {
-    public ExecutorBundle(string name, string? description=null)
+    [PrimaryKey]
+    public Guid Id { get; set; }
+    public Bundle(string name, string? description=null)
     {
         Name = name;
         Description = description;
     }
-
+    [Indexed(Unique =true)]
     /// <summary>
     /// Unique name of the executor bundle.
     /// </summary>
@@ -21,5 +24,6 @@ public class ExecutorBundle
     /// 
     /// </summary>
     public string? Description { get; set; }
-    public List<ExecutorStep> Steps { get; set; } = new List<ExecutorStep>();
+    [Ignore]
+    public virtual List<BundleStep> Steps { get; set; } = new List<BundleStep>();
 }

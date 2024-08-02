@@ -13,10 +13,14 @@
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>SimpleSequenceExecutor.md</PackageReadmeFile>
 	  <PackageTags>devtoys-app</PackageTags>
+	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\..\doc\SimpleSequenceExecutor.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="sqlite-net-pcl" />
 	</ItemGroup>
 
 	<ItemGroup>

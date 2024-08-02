@@ -12,14 +12,15 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReadmeFile>RsaGenerator.md</PackageReadmeFile>
 		<PackageTags>devtoys-app</PackageTags>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DevToys.Api"  />
+		<PackageReference Include="DevToys.Api" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
-		<None Include="..\..\doc\RsaGenerator.md" Pack="true" PackagePath=""/>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\RsaGenerator.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -12,6 +12,7 @@
 	  <PackageTags>devtoys-app</PackageTags>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>FileSplitter.md</PackageReadmeFile>
+	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +20,8 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
-		<None Include="..\..\doc\FileSplitter.md" Pack="true" PackagePath=""/>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\FileSplitter.md" Pack="true" PackagePath="" />
 
 	</ItemGroup>
 	<ItemGroup>
