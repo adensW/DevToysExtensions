@@ -19,7 +19,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
     <!-- Defines the bin and obj folder paths -->
-    <RepoRoot>$([System.IO.Path]::GetDirectoryName($([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)'))))\</RepoRoot>
+    <RepoRoot>$([System.IO.Path]::GetDirectoryName($([MSBuild]::GetPathOfFileAbove('.gitignore', '$(MSBuildThisFileDirectory)'))))\</RepoRoot>
     <BaseOutputPath>$(RepoRoot)bin\$(Configuration)\$(Platform)\</BaseOutputPath>
     <OutputPath>$(BaseOutputPath)$(MSBuildProjectName)\</OutputPath>
     <BaseIntermediateOutputPath>$(RepoRoot)obj\$(Platform)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>

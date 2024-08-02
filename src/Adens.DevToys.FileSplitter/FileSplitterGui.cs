@@ -17,7 +17,7 @@ namespace Adens.DevToys.FileSplitter;
     LongDisplayTitleResourceName = nameof(FileSplitter.LongDisplayTitle),
     DescriptionResourceName = nameof(FileSplitter.Description),
     AccessibleNameResourceName = nameof(FileSplitter.AccessibleName))]
-internal sealed class FileSplitterGui : IGuiTool
+internal sealed partial class FileSplitterGui : IGuiTool
 {
     private enum SplitType
     {
