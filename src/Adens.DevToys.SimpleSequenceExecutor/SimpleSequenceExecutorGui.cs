@@ -1,17 +1,15 @@
 ﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using Adens.DevToys.SimpleSequenceExecutor.Helpers;
 using Adens.DevToys.SimpleSequenceExecutor.UI;
 using DevToys.Api;
-using System;
+using SQLite;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
-using System.Security.Cryptography;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using static DevToys.Api.GUI;
 using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
-using System.Reflection.Metadata;
-using SQLite;
+using static DevToys.Api.GUI;
 
 namespace Adens.DevToys.SimpleSequenceExecutor;
 
@@ -44,124 +42,57 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
 {
   
     private UIToolView? _view;
-    #region stored settings
-    private readonly ISettingsProvider _settingsProvider;
-    public static readonly SettingDefinition<List<ExecutorBundle>> bundles // Define a setting.
-    = new(
-#if DEBUG
-        name: $"Debug.{nameof(SimpleSequenceExecutorGui)}.{nameof(bundles)}", // Unique name for the setting. Use the tool name to avoid conflicts.
-#else
-    name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(bundles)}", // Unique name for the setting. Use the tool name to avoid conflicts.
-#endif
-        defaultValue: new List<ExecutorBundle>());                              // Default value for the setting.
-    public static readonly SettingDefinition<ExecutorBundle?> currentBundle // Define a setting.
-  = new(
-#if DEBUG
-       name: $"Debug.{nameof(SimpleSequenceExecutorGui)}.{nameof(currentBundle)}", // Unique name for the setting. Use the tool name to avoid conflicts.
-#else
-   name: $"{nameof(SimpleSequenceExecutorGui)}.{nameof(currentBundle)}", // Unique name for the setting. Use the tool name to avoid conflicts.
-#endif
-
-      defaultValue: null,
-      serialize: (obj) => { 
-          return JsonSerializer.Serialize(obj);
-      },
-      deserialize: (str) => {
-          return JsonSerializer.Deserialize<ExecutorBundle>(str);
-      });                              // Default value for the setting.
-#endregion
     #region save logic
-    public List<ExecutorBundle> _bundles;
-    public List<ExecutorBundle> Bundles { 
-        get=>_bundles;
-        internal set => SetPropertyValue(ref _bundles, value, (sender,args) => { 
-            _settingsProvider.SetSetting(bundles, value);
-            RefreshBundles();
-
-        });
-    }
-    private ExecutorBundle _currentBundle;
-    public ExecutorBundle CurrentBundle { get=>_currentBundle; internal set =>SetPropertyValue(ref _currentBundle, value, (sender,args) => {
-        _settingsProvider.SetSetting(currentBundle, value);
-    }); }
-    private void ExecutorPanel_BundleChanged(object? sender, EventArgs e)
+    private ObservableCollection<Bundle> _bundles = new ObservableCollection<Bundle>();
+    public ObservableCollection<Bundle> Bundles => _bundles;
+    public void Dispose()
     {
-        var current = _executorPanel.Bundle;
-        var c = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(current));
-        CurrentBundle = c;
-        foreach (var item in Bundles)
-        {
-            if (item.Name == current.Name)
-            {
-                item.Steps = current.Steps;
-            }
-        }
-        var bs = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
-        Bundles = bs;
+        _bundles.CollectionChanged -= Bundles_CollectionChanged;
     }
+    private void Bundles_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        RefreshBundles();
+    }
+
+    //private CurrentBundle _currentBundle;
+    //public CurrentBundle CurrentBundle { get=>_currentBundle; internal set =>SetPropertyValue(ref _currentBundle, value, (sender,args) => {
+    //}); }
+  
     #endregion
     #region sqlite
     private void CheckSqliteInit()
     {
-        string appFolder = AppContext.BaseDirectory;
-        var pluginFolder = Path.Combine(appFolder!, "Plugins", "Adens.DevToys.SimpleSequenceExecutor");
-        if (!Directory.Exists(pluginFolder))
-        {
-            Directory.CreateDirectory(pluginFolder);
-        }
-        var databasePath = Path.Combine(pluginFolder, "SimpleSequenceExecutor.db");
-        using var db = new SQLiteConnection(databasePath);
+        SqliteLoadHepler.EnsureSqliteLoaded();
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
         db.CreateTable<Bundle>();
+        db.CreateTable<CurrentBundle>();
         db.CreateTable<BundleStep>();
         db.CreateTable<BundleStepParameter>();
     }
     #endregion
-    //private readonly IUIList _bundleList = List(nameof(_bundleList));
-    //internal IUIList BundleList => _bundleList;
-    //private readonly IUIDataGrid BundleList = DataGrid().Extendable().AllowSelectItem().WithColumns("name(double click this)", "operate");
+ 
     private readonly IUIStack BundleList = Stack().Vertical();
     private readonly IUIExecutorPanel _executorPanel;
     [ImportingConstructor]
     public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
     {
+        _bundles.CollectionChanged += Bundles_CollectionChanged;
         CheckSqliteInit();
-        _settingsProvider = settingsProvider;
-
-        _currentBundle = settingsProvider.GetSetting(currentBundle);
-        _bundles = settingsProvider.GetSetting(bundles);
-
-        //_settingsProvider.SettingChanged += OnSettingChanged;
-        _executorPanel = UIExecutorPanel(nameof(_executorPanel), _settingsProvider);
-        _executorPanel.BundleChanged += ExecutorPanel_BundleChanged;
-        //BundleList.SelectedItemChanged+=OnBundleSelected;
-        //BundleList.SelectedRowChanged+=OnBundleSelected;
-        //BundleList.Select(Bundles.IndexOf(CurrentBundle));
+        RestoreBundles();
+         _executorPanel = UIExecutorBundleExecutorsPanel(nameof(_executorPanel));
         RefreshBundles(); 
         RefreshCurrentBundles();
     }
-
-    //private void OnBundleSelected(object? sender, EventArgs e)
-    //{
-    //    if (sender == null || ((IUIDataGrid)sender).SelectedRow == null || ((IUIDataGrid)sender).SelectedRow?.Value == null)
-    //    {
-    //        return;
-    //    }
-    //    CurrentBundle = ((IUIDataGrid)sender).SelectedRow.Value as ExecutorBundle;
-    //}
-
-    //private async ValueTask OnBundleSelected(IUIDataGridRow? selectedRow)
-    //{
-    //    if (selectedRow == null)
-    //    {
-    //        return;
-    //    }
-    //    CurrentBundle = selectedRow.Value as ExecutorBundle;
-
-    //}
+    private void RestoreBundles()
+    {
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
+        _bundles.Clear();
+        _bundles.AddRange( db.Table<Bundle>().ToList());
+    }
 
     private void RefreshCurrentBundles()
     {
-        _executorPanel.Fill(CurrentBundle);
+        //_executorPanel.Fill(CurrentBundle);
     }
     private void RefreshBundles()
     {
@@ -187,19 +118,26 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
         BundleList.WithChildren(bundleItems.ToArray());
         //_bundleList.Select(Bundles.IndexOf(CurrentBundle));
     }
-    private void SelectBundle(ExecutorBundle bundle)
+    private void SelectBundle(Bundle bundle)
     {
-        CurrentBundle = bundle;
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
+        var currentEntity= db.Table<CurrentBundle>().FirstOrDefault();
+        if (currentEntity == null)
+        {
+            currentEntity = new CurrentBundle() { BundleId = bundle.Id };
+        }
+        else
+        {
+            currentEntity.BundleId = bundle.Id;
+        }
+        db.InsertOrReplace(currentEntity);
+        
     }
-    private void DeleteBundle(ExecutorBundle bundle)
+    private void DeleteBundle(Bundle bundle)
     {
-        //if (bundle == CurrentBundle)
-        //{
-        //    CurrentBundle =null;
-        //}
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
+        db.Delete(bundle);
         Bundles.Remove(bundle);
-
-        Bundles = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
     }
     public UIToolView View
     {
@@ -276,8 +214,10 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
     }
     private async ValueTask AddExecutorBundleClick()
     {
-        Bundles.Add(new ExecutorBundle(_dialogNameInput.Text, _dialogDescriptionInput.Text));
-        Bundles = JsonSerializer.Deserialize<List<ExecutorBundle>>(JsonSerializer.Serialize(Bundles));
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
+        var bundle = new Bundle() { Id = Guid.NewGuid(), Name = _dialogNameInput.Text, Description = _dialogDescriptionInput.Text };
+        db.Insert(bundle);
+        Bundles.Add(bundle);
         ResetDialog();
         _view.CurrentOpenedDialog?.Close();
     }

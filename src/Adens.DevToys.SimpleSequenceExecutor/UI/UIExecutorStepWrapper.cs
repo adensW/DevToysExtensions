@@ -1,4 +1,5 @@
-﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
+using Adens.DevToys.SimpleSequenceExecutor.Entities;
 using CommunityToolkit.Diagnostics;
 using DevToys.Api;
 using System;
@@ -21,34 +22,34 @@ public class StepChangedArgs : EventArgs
         NewType = newType;
     }
 }
-public class ExecutorStepArgs : EventArgs
+public class BundleStepArgs : EventArgs
 {
-    public ExecutorStep Step { get; set; }
+    public BundleStep Step { get; set; }
 
 
-    public ExecutorStepArgs(ExecutorStep step) : base()
+    public BundleStepArgs(BundleStep step) : base()
     {
         Step = step;
     }
 }
 public interface IUIExecutorWrapper : IUICard
 {
-    ExecutorStep Step { get; }
+    BundleStep Step { get; }
     IUIExecutor UIExecutor { get; }
     event EventHandler? UIExecutorChanged;
     event EventHandler? StepChanged;
-    event EventHandler<ExecutorStepArgs>? OnAddAfterClicked;
-    event EventHandler<ExecutorStepArgs>? OnMoveUpClicked;
-    event EventHandler<ExecutorStepArgs>? OnDeleteClicked;
-    event EventHandler<ExecutorStepArgs>? OnMoveDownClicked;
-    event EventHandler<ExecutorStepArgs>? OnAddBeforeClicked;
+    event EventHandler<BundleStepArgs>? OnAddAfterClicked;
+    event EventHandler<BundleStepArgs>? OnMoveUpClicked;
+    event EventHandler<BundleStepArgs>? OnDeleteClicked;
+    event EventHandler<BundleStepArgs>? OnMoveDownClicked;
+    event EventHandler<BundleStepArgs>? OnAddBeforeClicked;
 
     ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string,object> runtimeVariables);
 }
-internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
+internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
 {
-    private ExecutorStep _step;
-    public ExecutorStep Step {
+    private BundleStep _step;
+    public BundleStep Step {
         get => _step;
         internal set=>SetPropertyValue(ref _step,value,StepChanged);
     }
@@ -63,23 +64,13 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
         internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
     //private IUIStack _select;
     //private IUISelectDropDownList _selectDropdownList = SelectDropDownList(Guid.NewGuid().ToString()).AlignHorizontally(UIHorizontalAlignment.Left);
-    internal UIExecutorStepWrapper(string? id, ExecutorStep step) : base(id)
+    internal UIBundleStepWrapper(string? id, BundleStep step) : base(id)
     {
-        UIExecutor = ExecutorGenerator.Generate(step.Type,step.Parameters);
-        UIExecutor.ParametersChanged += OnParametersChanged;
+        UIExecutor = ExecutorGenerator.Generate(step.Type);
         StepChanged += Rerender;
-
-       
         Step = step;
 
     }
-
-    private void OnParametersChanged(object? sender, EventArgs e)
-    {
-        Step = new ExecutorStep { Id = Step.Id, Type = Step.Type,Parameters= ((IUIExecutor)sender).Parameters };
-
-    }
-
     private void Rerender(object? sender, EventArgs e)
     {
         Render();
@@ -123,26 +114,26 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
 
     private async ValueTask OnAddAfterClick()
     {
-        OnAddAfterClicked?.Invoke(this, new ExecutorStepArgs(Step));
+        OnAddAfterClicked?.Invoke(this, new BundleStepArgs(Step));
     }
 
     private async ValueTask OnMoveDownClick()
     {
-        OnMoveDownClicked?.Invoke(this, new ExecutorStepArgs(Step));
+        OnMoveDownClicked?.Invoke(this, new BundleStepArgs(Step));
     }
     private async ValueTask OnDeleteClick()
     {
-        OnDeleteClicked?.Invoke(this, new ExecutorStepArgs(Step));
+        OnDeleteClicked?.Invoke(this, new BundleStepArgs(Step));
     }
 
     private async ValueTask OnMoveUpClick()
     {
-        OnMoveUpClicked?.Invoke(this, new ExecutorStepArgs(Step));
+        OnMoveUpClicked?.Invoke(this, new BundleStepArgs(Step));
     }
 
     private async ValueTask OnAddBeforeClick()
     {
-        OnAddBeforeClicked?.Invoke(this, new ExecutorStepArgs(Step));
+        OnAddBeforeClicked?.Invoke(this, new BundleStepArgs(Step));
     }
 
     private async ValueTask OnItemClickAsync(IUIDropDownListItem? item)
@@ -151,9 +142,9 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
         {
             return;
         }
-        UIExecutor = ExecutorGenerator.Generate(item.Value as string,new Dictionary<string, object>());
-        UIExecutor.ParametersChanged += OnParametersChanged;
-        Step = new ExecutorStep { Id= Step.Id, Type= item.Value as string };
+        UIExecutor = ExecutorGenerator.Generate(item.Value as string);
+     
+        Step = new BundleStep { Id= Step.Id, Type= item.Value as string };
     }
 
     public async ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string, object> runtimeVariables)
@@ -167,11 +158,11 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
     }
     public event EventHandler? StepChanged;
     private event EventHandler? RerenderTrigger;
-    public event EventHandler<ExecutorStepArgs>? OnAddAfterClicked;
-    public event EventHandler<ExecutorStepArgs>? OnMoveUpClicked;
-    public event EventHandler<ExecutorStepArgs>? OnDeleteClicked;
-    public event EventHandler<ExecutorStepArgs>? OnMoveDownClicked;
-    public event EventHandler<ExecutorStepArgs>? OnAddBeforeClicked;
+    public event EventHandler<BundleStepArgs>? OnAddAfterClicked;
+    public event EventHandler<BundleStepArgs>? OnMoveUpClicked;
+    public event EventHandler<BundleStepArgs>? OnDeleteClicked;
+    public event EventHandler<BundleStepArgs>? OnMoveDownClicked;
+    public event EventHandler<BundleStepArgs>? OnAddBeforeClicked;
     #region 
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
@@ -196,12 +187,12 @@ internal class UIExecutorStepWrapper : UIElement, IUIExecutorWrapper
 public static partial class GUI
 {
 
-    public static IUIExecutorWrapper UIExecutorWrapper(ExecutorStep step)
+    public static IUIExecutorWrapper UIExecutorWrapper(BundleStep step)
     {
         return UIExecutorWrapper(null, step);
     }
-    public static IUIExecutorWrapper UIExecutorWrapper(string? id, ExecutorStep step)
+    public static IUIExecutorWrapper UIExecutorWrapper(string? id, BundleStep step)
     {
-        return new UIExecutorStepWrapper(id, step);
+        return new UIBundleStepWrapper(id, step);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
 using DebounceThrottle;
 using DevToys.Api;
 using System;
@@ -33,11 +33,10 @@ internal class UITextDisplayExecutor : UIElement, IUIExecutor
 
     private DebounceDispatcher _debouncer1;
     private IUILabel _displayLabel = Label().Text("");
-    public UITextDisplayExecutor(string? id, Dictionary<string, object> parameters) : base(id)
+    public UITextDisplayExecutor(string? id) : base(id)
     {
         _debouncer1 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
           maxDelay: TimeSpan.FromSeconds(3));
-        Parameters = parameters;
         if (Parameters.TryGetValue(nameof(Text), out object val1))
         {
             text = val1?.ToString() ?? string.Empty;
@@ -104,13 +103,13 @@ internal class UITextDisplayExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor TextDisplayExecutor(Dictionary<string, object> parameters)
+    public static IUIExecutor TextDisplayExecutor()
     {
-        return TextDisplayExecutor(null, parameters);
+        return TextDisplayExecutor(null);
     }
-    public static IUIExecutor TextDisplayExecutor(string? id, Dictionary<string, object> parameters)
+    public static IUIExecutor TextDisplayExecutor(string? id)
     {
-        return new UITextDisplayExecutor(id,parameters);
+        return new UITextDisplayExecutor(id);
     }
 
 }

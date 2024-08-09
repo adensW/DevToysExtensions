@@ -1,4 +1,4 @@
-﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
 using CliWrap;
 using DebounceThrottle;
 using DevToys.Api;
@@ -39,14 +39,13 @@ internal class UIWriteFileExecutor : UIElement, IUIExecutor
     private DebounceDispatcher _debouncer1;
     private DebounceDispatcher _debouncer2;
     private IUISingleLineTextInput _valueInput = SingleLineTextInput().Title("Value");
-    public UIWriteFileExecutor(string? id, Dictionary<string, object> parameters) : base(id)
+    public UIWriteFileExecutor(string? id) : base(id)
     {
         _debouncer1 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
             maxDelay: TimeSpan.FromSeconds(3));
         _debouncer2 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
          maxDelay: TimeSpan.FromSeconds(3));
         
-        Parameters = parameters;
         if (Parameters.TryGetValue(nameof(Path), out object val1))
         {
             path = val1?.ToString() ?? string.Empty;
@@ -133,14 +132,14 @@ internal class UIWriteFileExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor WriteFileExecutor(Dictionary<string, object> parameters)
+    public static IUIExecutor WriteFileExecutor()
     {
-        return WriteFileExecutor(null, parameters);
+        return WriteFileExecutor(null);
     }
 
-    public static IUIExecutor WriteFileExecutor(string? id, Dictionary<string, object> parameters)
+    public static IUIExecutor WriteFileExecutor(string? id)
     {
-        return new UIWriteFileExecutor(id, parameters);
+        return new UIWriteFileExecutor(id);
     }
 
 

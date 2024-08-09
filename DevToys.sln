@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{425E32B5-032B-4BD5-BFF7-9B09B59E1068}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -27,12 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{43221405-036
 		doc\FileSplitter.md = doc\FileSplitter.md
 		doc\RsaGenerator.md = doc\RsaGenerator.md
 		doc\SimpleSequenceExecutor.md = doc\SimpleSequenceExecutor.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F660621-D274-47A8-99DB-B9BCCA52AEF3}"
-	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
-		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adens.DevToys.Testbase", "src\Adens.DevToys.Testbase\Adens.DevToys.Testbase.csproj", "{5FB41931-DACC-4BBC-841B-DD434DF9B1AC}"
@@ -104,7 +101,6 @@ Global
 		{BDFE8D9B-4F09-4903-8D9C-6BA71A6F9931} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{170E74DB-3102-4A7F-9401-36F53C824D8A} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{7609061D-8275-4014-937F-B29BC079B45C} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
-		{2F660621-D274-47A8-99DB-B9BCCA52AEF3} = {425E32B5-032B-4BD5-BFF7-9B09B59E1068}
 		{5FB41931-DACC-4BBC-841B-DD434DF9B1AC} = {81442C92-0BB6-49E4-A991-FF2DE5651073}
 		{6EC5B200-0326-43AD-B855-D6A0F48E444A} = {DE0672CD-CB25-484B-A414-1A154D4089E8}
 	EndGlobalSection

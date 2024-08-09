@@ -1,30 +1,31 @@
 ﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
 using DevToys.Api;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Text.Json;
 using static Adens.DevToys.SimpleSequenceExecutor.UI.GUI;
 using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 public interface IUIExecutorPanel : IUICard
 {
-    /// <summary>
-    /// Gets the list of child elements.
-    /// </summary>
-    ExecutorBundle? Bundle { get; }
-    /// <summary>
-    /// Raised when <see cref="Children"/> is changed.
-    /// </summary>
-    event EventHandler? BundleChanged;
+    void SetBundle(Bundle bundle);
+    void Render();
 }
 internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
 {
-    private ISettingsProvider _settingProvider;
-  
 
-    private ExecutorBundle? _bundle;
-    public ExecutorBundle? Bundle {
-        get => _bundle;
-        internal set => SetPropertyValue(ref _bundle, value, BundleChanged);
+    private ObservableCollection<BundleStep> _steps = new ObservableCollection<BundleStep>();
+    public ObservableCollection<BundleStep> Steps => _steps;
+    public void Dispose()
+    {
+        _steps.CollectionChanged -= Bundles_CollectionChanged;
     }
+    private void Bundles_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Render();
+    }
+    private Bundle? _bundle;
+
     private IUIElement? _ui;
     public IUIElement? UIElement { 
         get=>_ui;
@@ -38,28 +39,12 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
         internal set => SetPropertyValue(ref _signal, value, ExecuteTrigger);
     }
     private Dictionary<string, object> RuntimeVariables { get; set; } = new Dictionary<string, object>();
-    internal UIExecutorBundleExecutorsPanel(string? id, ISettingsProvider settingProvider) : base(id)
+    internal UIExecutorBundleExecutorsPanel(string? id) : base(id)
     {
         _button.OnClick(AddButtonClick);
-        BundleChanged += RenderEventAction;
         ExecuteTrigger += Execute;
-        _settingProvider = settingProvider;
-        _settingProvider.SettingChanged += _settingProvider_SettingChanged;
+     
     }
-
-    private void _settingProvider_SettingChanged(object? sender, SettingChangedEventArgs e)
-    {
-        var currentBundle = _settingProvider.GetSetting(SimpleSequenceExecutorGui.currentBundle);
-        if (currentBundle == null)
-        {
-            return;
-        }
-        if(currentBundle.Name!=_bundle?.Name)
-        {
-            Bundle = currentBundle;
-        }
-    }
-
     private void Execute(object? sender, EventArgs e)
     {
        
@@ -69,18 +54,8 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
         }
     }
 
-    private void RenderEventAction(object? sender, EventArgs e)
-    {
-        if(_bundle==null)
-        {
-            return;
-        }
-     
-        Render();
-    }
-
     private IUIButton _button= Button().Text("Add");
-    internal void Render()
+    public void Render()
     {
         if (_bundle == null)
         {
@@ -116,69 +91,56 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
             );
     }
 
-    private void OnAddBeforeClicked(object? sender, ExecutorStepArgs e)
+    private void OnAddBeforeClicked(object? sender, BundleStepArgs e)
     {
-        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        int index = Steps.IndexOf(e.Step);
         if (index < 0) {
             index = 0;
         }
-        a.Steps.Insert(index, new ExecutorStep() { 
-            Id = Guid.NewGuid().ToString(),
-            Type = Constants.EmptyExecutor
+        Steps.Insert(index, new BundleStep() { 
+            Id = Guid.NewGuid(),
+            Type = Constants.EmptyExecutor,
+            BundleId = _bundle.Id
         });
-        Bundle = a;
     }
 
-    private void OnMoveDownClicked(object? sender, ExecutorStepArgs e)
+    private void OnMoveDownClicked(object? sender, BundleStepArgs e)
     {
-        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
-        if (index >= 0 && index < a.Steps.Count - 1)
+        int index = Steps.IndexOf(e.Step);
+        if (index >= 0 && index < Steps.Count - 1)
         {
             // 将该项与前一项交换位置
-            ExecutorStep temp = a.Steps[index];
-            a.Steps[index] = a.Steps[index + 1];
-            a.Steps[index + 1] = temp;
-            Bundle = a;
+            Steps.Move(index, index + 1);
         }
     }
 
-    private void OnDeleteClicked(object? sender, ExecutorStepArgs e)
+    private void OnDeleteClicked(object? sender, BundleStepArgs e)
     {
-        _bundle.Steps.Remove(e.Step);
-        Bundle = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-
+        Steps.Remove(e.Step);
     }
 
-    private void OnMoveUpClicked(object? sender, ExecutorStepArgs e)
+    private void OnMoveUpClicked(object? sender, BundleStepArgs e)
     {
-
-        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
-        if (index > 0 && index < a.Steps.Count)
+        int index = Steps.IndexOf(e.Step);
+        if (index > 0 && index < Steps.Count)
         {
             // 将该项与前一项交换位置
-            ExecutorStep temp = a.Steps[index];
-            a.Steps[index] = a.Steps[index - 1];
-            a.Steps[index - 1] = temp;
-            Bundle = a;
+            Steps.Move(index, index - 1);
         }
     }
 
-    private void OnAddAfterClicked(object? sender, ExecutorStepArgs e)
+    private void OnAddAfterClicked(object? sender, BundleStepArgs e)
     {
-        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-        int index = a.Steps.FindIndex(0, z => z.Id == e.Step.Id);
+        int index = Steps.IndexOf( e.Step);
         if (index < 0)
         {
             index = 0;
         }
-        a.Steps.Insert(index+1, new ExecutorStep() { 
-            Id = Guid.NewGuid().ToString(),
-            Type = Constants.EmptyExecutor
+        Steps.Insert(index+1, new BundleStep() { 
+            Id = Guid.NewGuid(),
+            Type = Constants.EmptyExecutor,
+            BundleId=_bundle.Id
         });
-        Bundle = a;
 
     }
 
@@ -189,41 +151,30 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
 
     private async ValueTask AddButtonClick()
     {
-        var a = JsonSerializer.Deserialize< ExecutorBundle >(JsonSerializer.Serialize( _bundle));
-        a.Steps.Add(new ExecutorStep() { 
-            Id = Guid.NewGuid().ToString(),
-            Type = Constants.EmptyExecutor
+        Steps.Add(new BundleStep() { 
+            Id = Guid.NewGuid(),
+            Type = Constants.EmptyExecutor,
+            BundleId = _bundle.Id
         });
-        Bundle = a;
     }
 
     private void Executor_StepChanged(object? sender, EventArgs e)
     {
         var executorWrapper = (IUIExecutorWrapper)sender!;
-        foreach (var item in _bundle.Steps)
+        foreach (var item in Steps)
         {
             if (item.Id == executorWrapper.Step.Id)
             {
                 item.Type = executorWrapper.Step.Type;
-                item.Parameters = executorWrapper.Step.Parameters;
             }
         }
-        //updated data 
-        var bundles = _settingProvider.GetSetting(SimpleSequenceExecutorGui.bundles);
-        foreach (var item in bundles)
-        {
-            if (item.Name == _bundle.Name)
-            {
-                item.Steps = _bundle.Steps;
-            }
-        }
-        _settingProvider.SetSetting(SimpleSequenceExecutorGui.bundles, bundles);
-        var a = JsonSerializer.Deserialize<ExecutorBundle>(JsonSerializer.Serialize(_bundle));
-        Bundle = a;
 
     }
+    public void SetBundle(Bundle bundle)
+    {
+        _bundle = bundle;
+    }
     private event EventHandler? ExecuteTrigger;
-    public event EventHandler? BundleChanged;
     #region
     public event EventHandler? OrientationChanged;
     public event EventHandler? SpacingChanged;
@@ -246,21 +197,20 @@ internal class UIExecutorBundleExecutorsPanel : UIElement, IUIExecutorPanel
 public static partial class GUI
 {
    
-    public static IUIExecutorPanel UIExecutorPanel( ISettingsProvider settingsProvider)
+    public static IUIExecutorPanel UIExecutorBundleExecutorsPanel( )
     {
-        return UIExecutorPanel(null, settingsProvider);
-    }
-
-    
-    public static IUIExecutorPanel UIExecutorPanel(string? id,ISettingsProvider settingsProvider)
-    {
-        return new UIExecutorBundleExecutorsPanel(id, settingsProvider);
+        return UIExecutorBundleExecutorsPanel(null);
     }
     
-    public static IUIExecutorPanel Fill(this IUIExecutorPanel element, ExecutorBundle bundle)
+    public static IUIExecutorPanel UIExecutorBundleExecutorsPanel(string? id)
     {
-        ((UIExecutorBundleExecutorsPanel)element).Bundle = bundle;
-        ((UIExecutorBundleExecutorsPanel)element).Render();
+        return new UIExecutorBundleExecutorsPanel(id);
+    }
+    
+    public static IUIExecutorPanel Fill(this IUIExecutorPanel element, Bundle bundle)
+    {
+        element.SetBundle(bundle);
+        element.Render();
         return element;
     }
 }

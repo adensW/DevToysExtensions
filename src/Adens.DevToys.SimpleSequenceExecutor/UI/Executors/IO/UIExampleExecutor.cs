@@ -1,4 +1,4 @@
-using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using Adens.DevToys.SimpleSequenceExecutor.Args;
 using DebounceThrottle;
 using DevToys.Api;
 using System.ComponentModel.Composition;
@@ -27,12 +27,11 @@ internal class UIExampleExecutor : UIElement, IUIExecutor
     }
     private DebounceDispatcher _debouncer1;
     private IUISingleLineTextInput _valueInput = SingleLineTextInput().Title("Value");
-    public UIExampleExecutor(string? id, Dictionary<string, object> parameters) : base(id)
+    public UIExampleExecutor(string? id) : base(id)
     {
         _debouncer1 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
             maxDelay: TimeSpan.FromSeconds(3));
      
-        Parameters = parameters;
       
         if (Parameters.TryGetValue(nameof(ExampleValue), out object val1))
         {
@@ -97,13 +96,13 @@ internal class UIExampleExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor ExampleExecutor(Dictionary<string, object> parameters)
+    public static IUIExecutor ExampleExecutor()
     {
-        return ExampleExecutor(null, parameters);
+        return ExampleExecutor(null);
     }
 
-    public static IUIExecutor ExampleExecutor(string? id, Dictionary<string, object> parameters)
+    public static IUIExecutor ExampleExecutor(string? id)
     {
-        return new UIExampleExecutor(id, parameters);
+        return new UIExampleExecutor(id);
     }
 }

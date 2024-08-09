@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace Adens.DevToys.SimpleSequenceExecutor.Entities;
 public class Bundle
 {
+    public Bundle()
+    {
+    }
     [PrimaryKey]
     public Guid Id { get; set; }
     public Bundle(string name, string? description=null)

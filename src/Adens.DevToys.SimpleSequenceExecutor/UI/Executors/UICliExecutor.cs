@@ -1,4 +1,4 @@
-﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
 using CliWrap;
 using DebounceThrottle;
 using DevToys.Api;
@@ -35,7 +35,7 @@ internal class UICliExecutor : UIElement, IUIExecutor
     private DebounceDispatcher _debouncer1;
     private DebounceDispatcher _debouncer2;
     private DebounceDispatcher _debouncer3;
-    public UICliExecutor(string? id, Dictionary<string, object> parameters) : base(id)
+    public UICliExecutor(string? id) : base(id)
     {
         _debouncer1 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
             maxDelay: TimeSpan.FromSeconds(3));
@@ -43,7 +43,6 @@ internal class UICliExecutor : UIElement, IUIExecutor
          maxDelay: TimeSpan.FromSeconds(3));
         _debouncer3 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
          maxDelay: TimeSpan.FromSeconds(3));
-        Parameters = parameters;
         if (Parameters.TryGetValue(nameof(ExecuteblePath), out object val1))
         {
             executeblePath = val1?.ToString() ?? string.Empty;
@@ -115,14 +114,14 @@ internal class UICliExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor CliExecutor(Dictionary<string, object> parameters)
+    public static IUIExecutor CliExecutor()
     {
-        return CliExecutor(null,parameters);
+        return CliExecutor(null);
     }
 
-    public static IUIExecutor CliExecutor(string? id, Dictionary<string, object> parameters)
+    public static IUIExecutor CliExecutor(string? id)
     {
-        return new UICliExecutor(id,parameters);
+        return new UICliExecutor(id);
     }
    
 

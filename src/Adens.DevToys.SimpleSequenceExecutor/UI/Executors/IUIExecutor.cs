@@ -1,4 +1,4 @@
-﻿using Adens.DevToys.SimpleSequenceExecutor.Entities;
+﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
 using DevToys.Api;
 using System;
 using System.Collections.Generic;

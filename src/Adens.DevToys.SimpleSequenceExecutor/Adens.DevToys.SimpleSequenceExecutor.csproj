@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	   <TargetFrameworks>$(NetCore)</TargetFrameworks>
+	  <TargetFrameworks>$(NetCore)</TargetFrameworks>
 
 	  <PackageId>Adens.DevToys.SimpleSequenceExecutor</PackageId>
 	  <Version>0.0.1-alpha.3</Version>
@@ -15,12 +15,24 @@
 	  <PackageTags>devtoys-app</PackageTags>
 	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\BundleDbContext.cs" />
+  </ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\..\doc\SimpleSequenceExecutor.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="sqlite-net-pcl" />
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />-->
+		<PackageReference Include="sqlite-net-pcl" />
 	</ItemGroup>
 
 	<ItemGroup>
