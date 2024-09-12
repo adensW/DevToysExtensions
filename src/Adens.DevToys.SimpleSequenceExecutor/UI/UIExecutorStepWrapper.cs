@@ -11,17 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
-public class StepChangedArgs : EventArgs
-{
-    public string Id { get; set; }
-    public string NewType { get; set; }
-    
-
-    public StepChangedArgs(string id, string newType) :base()
-    {
-        NewType = newType;
-    }
-}
 public class BundleStepArgs : EventArgs
 {
     public BundleStep Step { get; set; }
@@ -35,8 +24,6 @@ public class BundleStepArgs : EventArgs
 public interface IUIExecutorWrapper : IUICard
 {
     BundleStep Step { get; }
-    IUIExecutor UIExecutor { get; }
-    event EventHandler? UIExecutorChanged;
     event EventHandler? StepChanged;
     event EventHandler<BundleStepArgs>? OnAddAfterClicked;
     event EventHandler<BundleStepArgs>? OnMoveUpClicked;
@@ -48,6 +35,7 @@ public interface IUIExecutorWrapper : IUICard
 }
 internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
 {
+ 
     private BundleStep _step;
     public BundleStep Step {
         get => _step;
@@ -59,23 +47,14 @@ internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
         get =>_ui;
     }
     private IUIExecutor _executor;
-    public IUIExecutor UIExecutor { 
-        get=> _executor;
-        internal set=> SetPropertyValue(ref _executor,value,UIExecutorChanged); }
     //private IUIStack _select;
     //private IUISelectDropDownList _selectDropdownList = SelectDropDownList(Guid.NewGuid().ToString()).AlignHorizontally(UIHorizontalAlignment.Left);
     internal UIBundleStepWrapper(string? id, BundleStep step) : base(id)
     {
-        UIExecutor = ExecutorGenerator.Generate(step.Type);
-        StepChanged += Rerender;
+        _executor = ExecutorGenerator.Generate(step.Type, step);
         Step = step;
-
-    }
-    private void Rerender(object? sender, EventArgs e)
-    {
         Render();
     }
-
     private void Render()
     {
         List<IUIDropDownListItem> menus = new List<IUIDropDownListItem>();
@@ -101,7 +80,7 @@ internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
                         .Vertical()
                         .LeftPaneLength(new UIGridLength(1, UIGridUnitType.Fraction))
                         .RightPaneLength(new UIGridLength(50, UIGridUnitType.Pixel))
-                        .WithLeftPaneChild(UIExecutor)
+                        .WithLeftPaneChild(_executor)
                         .WithRightPaneChild(Stack(Guid.NewGuid().ToString()).SmallSpacing().Vertical().WithChildren(
                             Button().Icon("FluentSystemIcons", '\uE571').OnClick(OnAddBeforeClick),
                             Button().Icon("FluentSystemIcons", '\uF1A5').OnClick(OnMoveUpClick),
@@ -142,9 +121,7 @@ internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
         {
             return;
         }
-        UIExecutor = ExecutorGenerator.Generate(item.Value as string);
-     
-        Step = new BundleStep { Id= Step.Id, Type= item.Value as string };
+        Step = new BundleStep { Id= Step.Id, Type= item.Value as string,BundleId=Step.BundleId };
     }
 
     public async ValueTask<ExecutedResult> ExecuteAsync(Dictionary<string, object> runtimeVariables)
@@ -157,7 +134,6 @@ internal class UIBundleStepWrapper : UIElement, IUIExecutorWrapper
         return ExecutedResult.Create(runtimeVariables);
     }
     public event EventHandler? StepChanged;
-    private event EventHandler? RerenderTrigger;
     public event EventHandler<BundleStepArgs>? OnAddAfterClicked;
     public event EventHandler<BundleStepArgs>? OnMoveUpClicked;
     public event EventHandler<BundleStepArgs>? OnDeleteClicked;

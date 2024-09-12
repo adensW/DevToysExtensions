@@ -1,6 +1,10 @@
 using Adens.DevToys.SimpleSequenceExecutor.Args;
+using Adens.DevToys.SimpleSequenceExecutor.Entities;
+using Adens.DevToys.SimpleSequenceExecutor.Helpers;
 using DebounceThrottle;
 using DevToys.Api;
+using SQLite;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using static DevToys.Api.GUI;
 namespace Adens.DevToys.SimpleSequenceExecutor.UI;
@@ -9,9 +13,11 @@ namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 internal class UIExampleExecutor : UIElement, IUIExecutor
 {
     public event EventHandler? ParametersChanged;
+    private BundleStep _step;
     private string exampleValue = string.Empty;
 
-    public Dictionary<string, object> Parameters { get; set; }
+    public ObservableCollection<BundleStepParameter> Parameters { get; set; } = new ObservableCollection<BundleStepParameter>();
+    private Dictionary<string, object> ParametersDict { get => Parameters.ToDictionary<BundleStepParameter, string, object>(z => z.Key, z => z.Value); }
     public string ExampleValue
     {
         get => exampleValue;
@@ -27,17 +33,17 @@ internal class UIExampleExecutor : UIElement, IUIExecutor
     }
     private DebounceDispatcher _debouncer1;
     private IUISingleLineTextInput _valueInput = SingleLineTextInput().Title("Value");
-    public UIExampleExecutor(string? id) : base(id)
+    public UIExampleExecutor(string? id,BundleStep step) : base(id)
     {
+        _step = step;
+        ReloadParameters();
         _debouncer1 = new DebounceDispatcher(interval: TimeSpan.FromMilliseconds(500),
             maxDelay: TimeSpan.FromSeconds(3));
-     
-      
-        if (Parameters.TryGetValue(nameof(ExampleValue), out object val1))
+        if (ParametersDict.TryGetValue(nameof(ExampleValue), out object val1))
         {
             exampleValue = val1?.ToString() ?? string.Empty;
         }
-        if (Parameters.TryGetValue(nameof(ExampleValueGainFromParameters), out object val2))
+        if (ParametersDict.TryGetValue(nameof(ExampleValueGainFromParameters), out object val2))
         {
             exampleValueGainFromParameters = true;
             if ((bool.TryParse(val2?.ToString(), out bool isChoosed)))
@@ -65,19 +71,28 @@ internal class UIExampleExecutor : UIElement, IUIExecutor
                        Label().Text("Write Executor"),
                        Stack().Vertical().WithChildren(switcher, _valueInput)
                     );
+      
+    }
+    private void ReloadParameters()
+    {
+        using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
+        Parameters.Clear();
+        Parameters.AddRange(db.Table<BundleStepParameter>().Where(x => x.StepId == _step.Id));
     }
     private ValueTask ToggleExampleValueGainFromParameters(bool arg)
     {
-        Parameters.Remove(nameof(ExampleValueGainFromParameters));
-        Parameters.Add(nameof(ExampleValueGainFromParameters), arg);
+        Parameters.Remove(Parameters.FirstOrDefault(z => z.Key == nameof(ExampleValueGainFromParameters)));
+        Parameters.Add(new BundleStepParameter() { StepId = _step.Id, Key = nameof(ExampleValueGainFromParameters), Value = arg.ToString() });
         ExampleValueGainFromParameters = arg;
         return ValueTask.CompletedTask;
     }
     private ValueTask OnValueChanged(string arg)
     {
-        Parameters.Remove(nameof(ExampleValue));
-        Parameters.Add(nameof(ExampleValue), arg);
-        _debouncer1.Debounce(() => ExampleValue = arg);
+     
+        _debouncer1.Debounce(() => {
+            Parameters.Remove(Parameters.FirstOrDefault(z => z.Key == nameof(ExampleValue)));
+            Parameters.Add(new BundleStepParameter() { StepId = _step.Id, Key = nameof(ExampleValue), Value = arg });
+            ExampleValue = arg; });
         return ValueTask.CompletedTask;
 
     }
@@ -96,13 +111,13 @@ internal class UIExampleExecutor : UIElement, IUIExecutor
 public static partial class GUI
 {
 
-    public static IUIExecutor ExampleExecutor()
+    public static IUIExecutor ExampleExecutor(BundleStep step)
     {
-        return ExampleExecutor(null);
+        return ExampleExecutor(null, step);
     }
 
-    public static IUIExecutor ExampleExecutor(string? id)
+    public static IUIExecutor ExampleExecutor(string? id,BundleStep step)
     {
-        return new UIExampleExecutor(id);
+        return new UIExampleExecutor(id,step);
     }
 }

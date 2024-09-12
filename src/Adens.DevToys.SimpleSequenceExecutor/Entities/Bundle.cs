@@ -27,6 +27,5 @@ public class Bundle
     /// 
     /// </summary>
     public string? Description { get; set; }
-    [Ignore]
-    public virtual List<BundleStep> Steps { get; set; } = new List<BundleStep>();
+  
 }

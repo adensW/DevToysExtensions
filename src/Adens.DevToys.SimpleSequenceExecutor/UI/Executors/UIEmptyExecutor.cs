@@ -1,7 +1,9 @@
 ﻿using Adens.DevToys.SimpleSequenceExecutor.Args;
+using Adens.DevToys.SimpleSequenceExecutor.Entities;
 using DevToys.Api;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -12,7 +14,10 @@ namespace Adens.DevToys.SimpleSequenceExecutor.UI;
 [Export(typeof(IUIExecutor))]
 internal class UIEmptyExecutor : UIElement, IUIExecutor
 {
-    public Dictionary<string, object> Parameters { get; set; }
+    public ObservableCollection<BundleStepParameter> Parameters { get; set; } = new ObservableCollection<BundleStepParameter>();
+    private Dictionary<string, object> ParametersDict { get => Parameters.ToDictionary<BundleStepParameter, string, object>(z => z.Key, z => z.Value); }
+
+
 
     public event EventHandler? ParametersChanged;
     public string Text { get;  set; } = string.Empty;

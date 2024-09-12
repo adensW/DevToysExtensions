@@ -16,19 +16,19 @@ public static class ExecutorGenerator
       
         return executor;
     }
-    public static IUIExecutor? Generate(string type)
+    public static IUIExecutor? Generate(string type, BundleStep step)
     {
         IUIExecutor executor = null;
         switch (type)
         {
             case Constants.TextDisplayExecutor:
-                executor = TextDisplayExecutor(Guid.NewGuid().ToString());
+                executor = TextDisplayExecutor(Guid.NewGuid().ToString(), step);
                 break;
             case Constants.CliExecutor:
-                executor =CliExecutor(Guid.NewGuid().ToString());
+                executor =CliExecutor(Guid.NewGuid().ToString(), step);
                 break;
             case Constants.WriteFileExecutor:
-                executor = WriteFileExecutor(Guid.NewGuid().ToString());
+                executor = WriteFileExecutor(Guid.NewGuid().ToString(), step);
                 break;
             case Constants.EmptyExecutor:
             default:

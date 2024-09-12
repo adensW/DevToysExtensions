@@ -54,10 +54,15 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
         RefreshBundles();
     }
 
-    //private CurrentBundle _currentBundle;
-    //public CurrentBundle CurrentBundle { get=>_currentBundle; internal set =>SetPropertyValue(ref _currentBundle, value, (sender,args) => {
-    //}); }
-  
+    private Bundle? _current;
+    public Bundle? Current
+    {
+        get => _current; internal set => SetPropertyValue(ref _current, value, (sender, args) =>
+        {
+            RefreshCurrentBundles();
+        });
+    }
+
     #endregion
     #region sqlite
     private void CheckSqliteInit()
@@ -76,23 +81,25 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
     [ImportingConstructor]
     public SimpleSequenceExecutorGui(ISettingsProvider settingsProvider)
     {
+        _executorPanel = UIExecutorBundleExecutorsPanel(nameof(_executorPanel),Current);
         _bundles.CollectionChanged += Bundles_CollectionChanged;
         CheckSqliteInit();
         RestoreBundles();
-         _executorPanel = UIExecutorBundleExecutorsPanel(nameof(_executorPanel));
-        RefreshBundles(); 
-        RefreshCurrentBundles();
     }
     private void RestoreBundles()
     {
         using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
         _bundles.Clear();
         _bundles.AddRange( db.Table<Bundle>().ToList());
+        var cur= db.Table<CurrentBundle>().FirstOrDefault();
+        if (cur != null) { 
+            _current = _bundles.FirstOrDefault(z => z.Id == cur.BundleId);
+        }
     }
 
     private void RefreshCurrentBundles()
     {
-        //_executorPanel.Fill(CurrentBundle);
+        _executorPanel.Fill(_current);
     }
     private void RefreshBundles()
     {
@@ -131,7 +138,7 @@ internal sealed class SimpleSequenceExecutorGui :ViewModelBase,IGuiTool
             currentEntity.BundleId = bundle.Id;
         }
         db.InsertOrReplace(currentEntity);
-        
+        Current = _bundles.FirstOrDefault(z=>z.Id==currentEntity.BundleId);
     }
     private void DeleteBundle(Bundle bundle)
     {
