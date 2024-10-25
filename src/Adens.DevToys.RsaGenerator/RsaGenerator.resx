@@ -147,4 +147,31 @@
   <data name="ShortDisplayTitle" xml:space="preserve">
     <value>Rsa Generator</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>This will take a lot of time to generate {0} length .
+Benchmark:
+
+```
+
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4317/23H2/2023Update/SunValley3)
+Intel Core i7-10700 CPU 2.90GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.403
+  [Host]     : .NET 8.0.10 (8.0.1024.46610), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.10 (8.0.1024.46610), X64 RyuJIT AVX2
+
+
+```
+
+2048   |     48.72 ms 
+4096   |    445.01 ms 
+6144   |  1,547.98 ms
+8192   |  4,467.49 ms
+10240  |  8,943.09 ms 
+12288  | 16,429.40 ms 
+14336  | 33,067.80 ms 
+16384  | 56,593.69 ms</value>
+  </data>
+  <data name="Generating" xml:space="preserve">
+    <value>Generating...</value>
+  </data>
 </root>

@@ -70,6 +70,34 @@ namespace Adens.DevToys.RsaGenerator {
         }
         
         /// <summary>
+        ///   查找类似 This will take a lot of time to generate {0} length .
+        ///Benchmark:
+        ///
+        ///```
+        ///
+        ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.4317/23H2/2023Update/SunValley3)
+        ///Intel Core i7-10700 CPU 2.90GHz, 1 CPU, 16 logical and 8 physical cores
+        ///.NET SDK 8.0.403
+        ///  [Host]     : .NET 8.0.10 (8.0.1024.46610), X64 RyuJIT AVX2
+        ///  DefaultJob : .NET 8.0.10 (8.0.1024.46610), X64 RyuJIT AVX2
+        ///
+        ///
+        ///```
+        ///
+        ///2048   |     48.72 ms 
+        ///4096   |    445.01 ms 
+        ///6144   |  1,547.98 ms
+        ///8192   |  4,467.49 ms
+        ///10240  |  8,943.09 ms 
+        ///12288  | 1 [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 A Rsa keypair generator extension for DevToys 的本地化字符串。
         /// </summary>
         internal static string Description {
@@ -102,6 +130,15 @@ namespace Adens.DevToys.RsaGenerator {
         internal static string Generate {
             get {
                 return ResourceManager.GetString("Generate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Generating... 的本地化字符串。
+        /// </summary>
+        internal static string Generating {
+            get {
+                return ResourceManager.GetString("Generating", resourceCulture);
             }
         }
         

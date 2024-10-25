@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(NetCore)</TargetFrameworks>
+	  <PackageId>Adens.DevToys.ProgressiveJpegConverter</PackageId>
+	  <Version>1.0.2</Version>
+	  <Title>ProgressiveJpegConverter</Title>
+	  <Description>ProgressiveJpegConverter Utility</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageTags>devtoys-app</PackageTags>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>ProgressiveJpegConverter.md</PackageReadmeFile>
+	  <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LICENSE.md" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\ProgressiveJpegConverter.md" Pack="true" PackagePath="" />
+
+	</ItemGroup>
+	<ItemGroup>
+    <PackageReference Include="DevToys.Api" />
+    <PackageReference Include="Magick.NET-Q16-HDRI-AnyCPU" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ProgressiveJpegConverter.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProgressiveJpegConverter.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ProgressiveJpegConverter.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProgressiveJpegConverter.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+</Project>
