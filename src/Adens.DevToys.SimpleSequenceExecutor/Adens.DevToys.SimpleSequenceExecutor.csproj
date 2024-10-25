@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>$(NetCore)</TargetFrameworks>
+
+	  <PackageId>Adens.DevToys.SimpleSequenceExecutor</PackageId>
+	  <Version>0.0.1-alpha.3</Version>
+	  <Title>SimpleSequenceExecutor</Title>
+	  <Description>Simple Sequence Executor</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>SimpleSequenceExecutor.md</PackageReadmeFile>
+	  <PackageTags>devtoys-app</PackageTags>
+	  <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\BundleDbContext.cs" />
+  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\SimpleSequenceExecutor.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />-->
+		<PackageReference Include="sqlite-net-pcl" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="SimpleSequenceExecutor.Designer.cs">
+			<DependentUpon>SimpleSequenceExecutor.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="SimpleSequenceExecutor.resx">
+			<LastGenOutput>SimpleSequenceExecutor.Designer.cs</LastGenOutput>
+			<Generator>ResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+  <!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)\**">
+				<Pack>true</Pack>
+				<PackagePath>lib\net8.0</PackagePath>
+			</None>
+		</ItemGroup>
+	</Target>
+</Project>

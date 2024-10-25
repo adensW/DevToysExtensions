@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>$(NetCore)</TargetFrameworks>
+
+		<PackageId>Adens.DevToys.OpenApiToCode</PackageId>
+		<Version>0.0.1-alpha.3</Version>
+		<Title>OpenApiToCode</Title>
+		<Description>OpenApi  To Code</Description>
+		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+		<Authors>adensW</Authors>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>OpenApiToCode.md</PackageReadmeFile>
+		<PackageTags>devtoys-app</PackageTags>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\OpenApiToCode.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.OpenApi.Readers" />
+	  <PackageReference Include="Scriban.Signed" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="OpenApiToCode.Designer.cs">
+	    <DependentUpon>OpenApiToCode.resx</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="OpenApiToCode.resx">
+	    <LastGenOutput>OpenApiToCode.Designer.cs</LastGenOutput>
+	    <Generator>ResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	</ItemGroup>
+	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)\**">
+				<Pack>true</Pack>
+				<PackagePath>lib\net8.0</PackagePath>
+			</None>
+		</ItemGroup>
+	</Target>
+</Project>

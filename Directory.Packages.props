@@ -1,0 +1,23 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="DebounceThrottle" Version="3.0.1" />
+    <PackageVersion Include="DevToys.Api" Version="2.0.4-preview" />
+    <PackageVersion Include="CliWrap" Version="3.6.6" />
+    <PackageVersion Include="Magick.NET-Q16-HDRI-AnyCPU" Version="14.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="FluentAssertions" Version="6.11.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageVersion Include="Microsoft.OpenApi.Readers" Version="1.6.21" />
+    <PackageVersion Include="Moq" Version="4.18.4" />
+    <PackageVersion Include="Scriban.Signed" Version="5.10.0" />
+    <PackageVersion Include="sqlite-net-pcl" Version="1.9.172" />
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.2" />
+    <PackageVersion Include="xunit" Version="2.5.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
+  </ItemGroup>
+</Project>

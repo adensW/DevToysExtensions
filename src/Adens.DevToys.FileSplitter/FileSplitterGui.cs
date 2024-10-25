@@ -9,7 +9,7 @@ namespace Adens.DevToys.FileSplitter;
 [Name("FileSplitter")]                                                         // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
-    IconGlyph = '\uE511',                                                     // An icon that represents a pizza
+    IconGlyph = '\uF33A',                                                     // An icon that represents a pizza
     GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(FileSplitterResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName = "Adens.DevToys.FileSplitter.FileSplitter",                      // The full name (including namespace) of the resource file containing our localized texts
@@ -17,7 +17,7 @@ namespace Adens.DevToys.FileSplitter;
     LongDisplayTitleResourceName = nameof(FileSplitter.LongDisplayTitle),
     DescriptionResourceName = nameof(FileSplitter.Description),
     AccessibleNameResourceName = nameof(FileSplitter.AccessibleName))]
-internal sealed class FileSplitterGui : IGuiTool
+internal sealed partial class FileSplitterGui : IGuiTool
 {
     private enum SplitType
     {

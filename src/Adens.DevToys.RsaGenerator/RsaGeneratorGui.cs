@@ -1,4 +1,5 @@
-﻿using DevToys.Api;
+﻿using Adens.DevToys.RsaGenerator.Helpers;
+using DevToys.Api;
 using System;
 using System.ComponentModel.Composition;
 using System.Security.Cryptography;
@@ -38,6 +39,9 @@ internal sealed class RsaGeneratorGui : IGuiTool
     private readonly IUINumberInput _bitInput = NumberInput("_bitInput")
                         .Title(RsaGenerator.Keylength)
                         .HideCommandBar()
+                        .Minimum(384)
+                        .Maximum(16384)
+                        .Step(8)
                         .CannotCopyWhenEditable()
                         .Text("2048")
                         ;
@@ -73,10 +77,53 @@ internal sealed class RsaGeneratorGui : IGuiTool
             return _view;
         }
     }
+    private readonly IUILabel dialogLable = Label()
+                               .Style(UILabelStyle.Body)
+                               .Text("");
+    private async Task<UIDialog> OpenCustomDialogAsync(bool dismissible)
+    {
+        dialogLable.Text(string.Format(RsaGenerator.Confirm, _bitInput.Value));
+        // Open a dialog
+        UIDialog dialog
+            = await _view.OpenDialogAsync(
+                dialogContent:
+                    Stack()
+                        .Vertical()
+                        .WithChildren(
+                           dialogLable),
+                footerContent:
+                Stack()
+                        .Horizontal()
+                        .WithChildren(
+                            Button()
+                        .AlignHorizontally(UIHorizontalAlignment.Right)
+                        .Text("OK")
+                        .OnClick(OnConfirmDialogButtonClick),
+                             Button()
+                        .AlignHorizontally(UIHorizontalAlignment.Right)
+                        .Text("Cancel")
+                        .OnClick(OnCloseDialogButtonClick)),
+                   
+                isDismissible: dismissible);
 
+        async void OnConfirmDialogButtonClick()
+        {
+            // On click on OK button, close the dialog.
+            await Generate((int)_bitInput.Value);
+            _view.CurrentOpenedDialog?.Close();
+        }
+         void OnCloseDialogButtonClick()
+        {
+            // On click on OK button, close the dialog.
+            _bitInput.Text("2048");
+            _view.CurrentOpenedDialog?.Close();
+        }
+
+        return dialog;
+    }
     private async ValueTask onGenerateClick()
     {
-        Generate((int)_bitInput.Value);
+        await Generate((int)_bitInput.Value);
     }
 
     private async ValueTask onSizeChanged(double arg)
@@ -93,12 +140,21 @@ internal sealed class RsaGeneratorGui : IGuiTool
         }
         else
         {
-            Generate(bit);
+            if (bit >= 2048 * 3)
+            {
+                await OpenCustomDialogAsync(dismissible: true);
+            }
+            else
+            {
+                await Generate(bit);
+            }
+            
         }
 
     }
-    private void Generate(int bit)
+    private async Task Generate(int bit)
     {
+        dialogLable.Text(RsaGenerator.Generating);
         _infoBar.Close();
         if (bit > 16384 || bit < 384 || bit % 8 != 0)
         {
@@ -106,12 +162,9 @@ internal sealed class RsaGeneratorGui : IGuiTool
             _infoBar.Description(RsaGenerator.ErrorMessage);
             return;
         }
-        using var rsa = new RSACryptoServiceProvider(bit);
-        string pri = rsa.ExportRSAPrivateKeyPem();
+        var (pri, pub) =await RsaGeneratorHelper.GenerateRsaKeyPairAsync(bit);
         _privKeyText.Text(pri);
-        string pub = rsa.ExportRSAPublicKeyPem();
         _pubKeyText.Text(pub);
-
     }
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {
