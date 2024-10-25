@@ -19,7 +19,7 @@ namespace Adens.DevToys.SimpleSequenceExecutor;
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
     IconGlyph = '\uE607',                                                     // An icon that represents a pizza
-    GroupName = PredefinedCommonToolGroupNames.Generators,                    // The group in which the tool will appear in the side bar.
+    GroupName = PredefinedAdensToolGroupNames.Executors,                    // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(SimpleSequenceExecutorResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName = "Adens.DevToys.SimpleSequenceExecutor.SimpleSequenceExecutor",                      // The full name (including namespace) of the resource file containing our localized texts
     ShortDisplayTitleResourceName = nameof(SimpleSequenceExecutor.WIPShortDisplayTitle),    // The name of the resource to use for the short display title

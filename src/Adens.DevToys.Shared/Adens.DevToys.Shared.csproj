@@ -11,14 +11,9 @@
     <Authors>adensW</Authors>
     <!--<PackageLicenseFile>LICENSE</PackageLicenseFile>-->
     <!--<PackageReadmeFile>RsaGenerator.md</PackageReadmeFile>-->
-    <PackageTags>devtoys-app</PackageTags>
 	  <RootNamespace>Adens.DevToys</RootNamespace>
 	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="ExecutorsGroup.cs" />
-  </ItemGroup>
 	<ItemGroup>
     <PackageReference Include="DebounceThrottle" />
     <PackageReference Include="DevToys.Api" />

@@ -17,6 +17,6 @@ internal class ExecutorsGroup : GuiToolGroup
         IconFontName = "FluentSystemIcons";
         IconGlyph = '\uE445';
         DisplayTitle = PredefinedAdensToolGroupNames.Executors;
-        AccessibleName = "Executors";
+        AccessibleName = "Adens.DevToys";
     }
 }

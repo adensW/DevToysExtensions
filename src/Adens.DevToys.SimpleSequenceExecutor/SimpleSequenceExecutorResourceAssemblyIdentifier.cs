@@ -1,5 +1,7 @@
 ﻿using DevToys.Api;
 using System.ComponentModel.Composition;
+using System.Reflection;
+
 namespace Adens.DevToys.SimpleSequenceExecutor;
 
 [Export(typeof(IResourceAssemblyIdentifier))]
