@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Text;
 using static DevToys.Api.GUI;
+using Adens.DevToys.ProgressiveJpegConverter.Helpers;
 
 namespace Adens.DevToys.ProgressiveJpegConverter;
 
@@ -32,6 +33,7 @@ internal sealed partial class ProgressiveJpegConverterGui : IGuiTool
     [ImportingConstructor]
     public ProgressiveJpegConverterGui(ISettingsProvider settingsProvider, IFileStorage fileStorage)
     {
+        MagickLoadHepler.EnsureMagickLoaded();
         _logger = this.Log();
         _settingsProvider = settingsProvider;
         _fileStorage = fileStorage;
