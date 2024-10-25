@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NetCore)</TargetFrameworks>
 	  <PackageId>Adens.DevToys.ProgressiveJpegConverter</PackageId>
-	  <Version>1.0.2</Version>
+	  <Version>0.0.1</Version>
 	  <Title>ProgressiveJpegConverter</Title>
 	  <Description>ProgressiveJpegConverter Utility</Description>
 	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>

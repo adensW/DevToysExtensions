@@ -1,5 +1,5 @@
 # Adens.DevToys.ProgressiveJpegConverter
-A file split utility for DevToys.
+Convert images to progressive jpeg image. include png, bmp, gif, jpg, jpeg, tiff, webp.
 
 ## License
 This extension is licensed under the GPL License - see the LICENSE file for details.
@@ -11,3 +11,4 @@ This extension is licensed under the GPL License - see the LICENSE file for deta
 ## Limitations
 
 Not support for DevToys CLI (for now).
+
