@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NetCore)</TargetFrameworks>
 	  <PackageId>Adens.DevToys.ProgressiveJpegConverter</PackageId>
-	  <Version>0.0.1</Version>
+	  <Version>0.0.3</Version>
 	  <Title>ProgressiveJpegConverter</Title>
 	  <Description>ProgressiveJpegConverter Utility</Description>
 	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
@@ -22,7 +22,7 @@
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\..\doc\ProgressiveJpegConverter.md" Pack="true" PackagePath="" />
-
+	
 	</ItemGroup>
 	<ItemGroup>
     <PackageReference Include="DevToys.Api" />
@@ -44,5 +44,13 @@
     </EmbeddedResource>
   </ItemGroup>
 
-
+	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)\net8.0\**">
+				<Pack>true</Pack>
+				<PackagePath>lib\net8.0</PackagePath>
+			</None>
+		</ItemGroup>
+	</Target>
 </Project>
