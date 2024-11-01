@@ -1,19 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>$(NetCore)</TargetFrameworks>
-	  <IsPackable>false</IsPackable>
-	  <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Platforms>AnyCPU;x64</Platforms>
+	  <TargetFramework>$(NetCore)</TargetFramework>
+	  <AssemblyName>Adens.DevToys.TestBase</AssemblyName>
+	  <PackageId>Adens.DevToys.Testbase</PackageId>
+	  <Version>0.0.1</Version>
+	  <Title>Adens.DevToys.Testbase</Title>
+	  <Description>Adens.DevToys.Testbase</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>Testbase.md</PackageReadmeFile>
+	  <RootNamespace>Adens.DevToys</RootNamespace>
+	  <Platforms>AnyCPU;x64</Platforms>
+	  <IsPackable>true</IsPackable>
   </PropertyGroup>
 	<ItemGroup>
-		
+		<None Remove="LICENSE.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\Testbase.md" Pack="true" PackagePath="" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DevToys.Api" />
 		<PackageReference Include="Microsoft.Extensions.Logging" />
 		<PackageReference Include="Moq" />
 		<PackageReference Include="xunit" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
 	</ItemGroup>
 </Project>
