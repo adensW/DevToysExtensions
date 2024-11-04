@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>$(NetCore)</TargetFrameworks>
+		<PackageId>Adens.DevToys.ScribanRenderer</PackageId>
+		<Version>0.0.1</Version>
+		<Title>ScribanRenderer</Title>
+		<Description>ScribanRenderer Utility</Description>
+		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+		<Authors>adensW</Authors>
+		<PackageTags>devtoys-app</PackageTags>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>ScribanRenderer.md</PackageReadmeFile>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="LICENSE.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\ScribanRenderer.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DevToys.Api" />
+		<PackageReference Include="Scriban.Signed" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="ScribanRenderer.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ScribanRenderer.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="ScribanRenderer.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>ScribanRenderer.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+
+</Project>
