@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Adens",
+  "classifications": [
+    "devtoys",
+    "Console"
+  ],
+  "identity": "Adens.Devtoys.Template.CSharp",
+  "name": "Adens Devtoys Extenions",
+  "shortName": "atoys",
+  "symbols": {
+    "CompanyName": {
+      "type": "parameter",
+      "description": "The company name for the project.",
+      "datatype": "string",
+      "defaultValue": "Adens.DevToys",
+      "replaces": "CompanyName",
+      "fileRename": "CompanyName"
+
+    },
+    "ProjectName": {
+      "type": "derived",
+      "description": "The project name for the project.",
+      "valueSource": "name",
+      "valueTransform": "ValueAfterLastDot",
+      "replaces": "ProjectName",
+      "fileRename": "ProjectName"
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)", // regex to match everything up to and including the final "."
+      "replacement": "" // replace it with empty string
+    }
+  },
+  "postActions": [
+    {
+      "description": "Add projects to solution",
+      "manualInstructions": [ { "text": "Add generated project to solution manually." } ],
+      "args": {
+        "solutionFolder": "src",
+        "projectFiles": [ "CompanyName.ProjectName.csproj" ]
+      },
+      "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+      "continueOnError": true
+    },
+    {
+      "description": "Add projects to solution",
+      "manualInstructions": [ { "text": "Add generated project to solution manually." } ],
+      "args": {
+        "solutionFolder": "test",
+        "projectFiles": [ "CompanyName.ProjectName.Tests.csproj" ]
+      },
+      "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+      "continueOnError": true
+    }
+  ]
+}

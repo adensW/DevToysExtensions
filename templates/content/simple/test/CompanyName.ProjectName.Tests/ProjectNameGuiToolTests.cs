@@ -10,7 +10,7 @@ public class ProjectNameGuiToolTests : TestBase
 
     public ProjectNameGuiToolTests()
     {
-        _tool = new ProjectNameGui(new MockISettingsProvider(), new MockIFileStorage());
+        _tool = new ProjectNameGui(new MockISettingsProvider());
         _toolView = _tool.View;
     }
 
