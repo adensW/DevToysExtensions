@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>$(NetCore)</TargetFrameworks>
 		<PackageId>Adens.DevToys.ScribanRenderer</PackageId>
-		<Version>0.0.1</Version>
+		<Version>0.0.3</Version>
 		<Title>ScribanRenderer</Title>
 		<Description>ScribanRenderer Utility</Description>
 		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
@@ -27,7 +27,12 @@
 		<PackageReference Include="DevToys.Api" />
 		<PackageReference Include="Scriban.Signed" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="sqlite-net-pcl" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
+	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="ScribanRenderer.Designer.cs">
 			<DesignTime>True</DesignTime>
@@ -51,4 +56,5 @@
 			</None>
 		</ItemGroup>
 	</Target>
+	
 </Project>
