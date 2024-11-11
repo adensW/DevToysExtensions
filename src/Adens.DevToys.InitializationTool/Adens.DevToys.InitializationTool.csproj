@@ -5,7 +5,7 @@
 	  <PackageId>Adens.DevToys.InitializationTool</PackageId>
 	  <Version>0.0.1</Version>
 	  <Title>InitializationTool</Title>
-	  <Description>InitializationTool Utility</Description>
+	  <Description>Initialization Tool</Description>
 	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
 	  <Authors>adensW</Authors>
@@ -22,15 +22,18 @@
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\..\doc\InitializationTool.md" Pack="true" PackagePath="" />
-
+		<!-- This makes sure to include platform-specific binaries into the NuGet package, if any-->
+		<None Include="runtimes\**" Pack="true" PackagePath="\lib\net8.0\runtimes\">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CliWrap" />
-		<PackageReference Include="CliWrap" />
+		<PackageReference Include="DevToys.Api" />
 	</ItemGroup>
-	<ItemGroup>
+	<!--<ItemGroup>
 	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
-	</ItemGroup>
+	</ItemGroup>-->
 
   <ItemGroup>
     <Compile Update="InitializationTool.Designer.cs">
@@ -46,6 +49,14 @@
       <LastGenOutput>InitializationTool.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
+	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)\**">
+				<Pack>true</Pack>
+				<PackagePath>lib</PackagePath>
+			</None>
+		</ItemGroup>
+	</Target>
 
 </Project>

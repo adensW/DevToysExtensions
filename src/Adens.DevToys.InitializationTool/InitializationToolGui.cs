@@ -11,7 +11,7 @@ namespace Adens.DevToys.InitializationTool;
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
     IconGlyph = '\uF33A',                                                     // An icon that represents a pizza
-    GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
+    GroupName = PredefinedCommonToolGroupNames.Generators,                    // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(InitializationToolResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName = "Adens.DevToys.InitializationTool.InitializationTool",                      // The full name (including namespace) of the resource file containing our localized texts
     ShortDisplayTitleResourceName = nameof(InitializationTool.ShortDisplayTitle),    // The name of the resource to use for the short display title

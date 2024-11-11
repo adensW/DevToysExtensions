@@ -2,7 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageVersion Include="DebounceThrottle" Version="3.0.1" />
-    <PackageVersion Include="DevToys.Api" Version="2.0.4-preview" />
+    <PackageVersion Include="DevToys.Api" Version="2.0.6-preview" />
     <PackageVersion Include="CliWrap" Version="3.6.6" />
     <PackageVersion Include="Magick.NET-Q16-HDRI-AnyCPU" Version="14.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
