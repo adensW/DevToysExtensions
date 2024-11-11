@@ -20,9 +20,7 @@
     <Compile Remove="ExecutorsGroup.cs" />
   </ItemGroup>
 	<ItemGroup>
-    <PackageReference Include="DebounceThrottle" />
     <PackageReference Include="DevToys.Api" />
-    <PackageReference Include="CliWrap" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
@@ -30,7 +28,7 @@
 	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
 	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
 		<ItemGroup>
-			<None Include="$(OutputPath)\**">
+			<None Include="$(OutputPath)\net8.0\**">
 				<Pack>true</Pack>
 				<PackagePath>lib\net8.0</PackagePath>
 			</None>

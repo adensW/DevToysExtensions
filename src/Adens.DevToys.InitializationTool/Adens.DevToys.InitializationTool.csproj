@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(NetCore)</TargetFrameworks>
+	  <PackageId>Adens.DevToys.InitializationTool</PackageId>
+	  <Version>0.0.1</Version>
+	  <Title>InitializationTool</Title>
+	  <Description>InitializationTool Utility</Description>
+	  <PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/adensW/DevToysExtensions</RepositoryUrl>
+	  <Authors>adensW</Authors>
+	  <PackageTags>devtoys-app</PackageTags>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>InitializationTool.md</PackageReadmeFile>
+	  <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LICENSE.md" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+		<None Include="..\..\doc\InitializationTool.md" Pack="true" PackagePath="" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CliWrap" />
+		<PackageReference Include="CliWrap" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Adens.DevToys.Shared\Adens.DevToys.Shared.csproj" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="InitializationTool.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InitializationTool.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="InitializationTool.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InitializationTool.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+</Project>

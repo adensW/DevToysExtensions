@@ -33,6 +33,9 @@
 		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />-->
 		<PackageReference Include="sqlite-net-pcl" />
+		<PackageReference Include="CliWrap" />
+		<PackageReference Include="DebounceThrottle" />
+
 	</ItemGroup>
 
 	<ItemGroup>
