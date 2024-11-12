@@ -35,3 +35,13 @@ Intel Core i7-10700 CPU 2.90GHz, 1 CPU, 16 logical and 8 physical cores
 | Key14336  | 33,067.80 ms | 5,580.311 ms | 16,366.088 ms |
 | Key16384  | 56,593.69 ms | 9,743.628 ms | 28,268.033 ms |
 
+
+## Changelog
+
+- 1.1.1
+
+upgrade DevToys.Api 2.0.6-preview
+
+- 1.1.0
+
+pop dialog when generate the length greater than 8192.

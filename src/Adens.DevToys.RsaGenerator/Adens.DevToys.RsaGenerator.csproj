@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		 <TargetFrameworks>$(NetCore)</TargetFrameworks>
 		<PackageId>Adens.DevToys.RsaGenerator</PackageId>
-		<Version>1.1.0</Version>
+		<Version>1.1.1</Version>
 		<Title>RsaGenerator</Title>
 		<Description>Rsa Generator Utility</Description>
 		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
