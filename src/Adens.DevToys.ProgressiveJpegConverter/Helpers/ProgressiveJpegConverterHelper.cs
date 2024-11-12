@@ -18,7 +18,7 @@ public static class ProgressiveJpegConverterHelper
     public static async Task ConvertByMagickAsync(Stream destinationStream, Stream imageStream, CancellationToken cancellationToken)
     {
         using var imageFromStream = new MagickImage(imageStream);
-        imageFromStream.Format = MagickFormat.Jpeg;
+        imageFromStream.Format = MagickFormat.Pjpeg;
         imageFromStream.Settings.Interlace = Interlace.Jpeg;
         imageFromStream.Quality = 100;
         await imageFromStream.WriteAsync(destinationStream);

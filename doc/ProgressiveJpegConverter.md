@@ -12,3 +12,8 @@ This extension is licensed under the GPL License - see the LICENSE file for deta
 
 Not support for DevToys CLI (for now).
 
+## Changelog
+
+- 0.0.4
+
+upgrade DevToys.Api 2.0.6-preview
