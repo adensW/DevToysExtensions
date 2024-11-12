@@ -98,7 +98,7 @@ internal sealed partial class FileSplitterGui : IGuiTool
                    _lineInpt
                       .Hide()
                         .Text(_settingsProvider.GetSetting(line).ToString())
-                        .OnValueChanged(onSizeChanged)
+                        .OnValueChanged(onLineChanged)
                         ),
                           _outputFilePathIinput
                         .Title(FileSplitter.OutputFilePath)
@@ -160,6 +160,12 @@ internal sealed partial class FileSplitterGui : IGuiTool
         _settingsProvider.SetSetting(size, (int)arg);
 
     }
+    private async ValueTask onLineChanged(double arg)
+    {
+        _settingsProvider.SetSetting(line, (int)arg);
+
+    }
+   
     private string GetOutputFilePath(string originPath,int surfix)
     {
         string path = originPath;
@@ -242,7 +248,7 @@ internal sealed partial class FileSplitterGui : IGuiTool
                     // 保存到文件
                     await SaveLineFile(sb, filename, surfix);
                     cur = 0;
-                    surfix++;
+                    surfix+=1;
                     sb.Clear();
                 }
             }
@@ -250,7 +256,7 @@ internal sealed partial class FileSplitterGui : IGuiTool
             {
                 await SaveLineFile(sb, filename, surfix);
                 cur = 0;
-                surfix++;
+                surfix += 1;
                 sb.Clear();
             }
         }

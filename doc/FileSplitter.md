@@ -11,3 +11,9 @@ This extension is licensed under the GPL License - see the LICENSE file for deta
 ## Limitations
 
 Not support for DevToys CLI (for now).
+
+## Changelog
+
+- 1.0.3
+fix line split bug
+upgrade DevToys.Api 2.0.6-preview
