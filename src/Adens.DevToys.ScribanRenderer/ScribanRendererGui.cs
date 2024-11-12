@@ -30,16 +30,42 @@ internal sealed partial class ScribanRendererGui : ViewModelBase, IGuiTool
 {
     private  void CheckSqliteInit()
     {
+        SqliteLoadHepler.EnsureSqliteLoaded();
         if (SqliteLoadHepler.HasDatabase())
         {
             IsFirst=false;
             return;
         }
-        SqliteLoadHepler.EnsureSqliteLoaded();
         using var db = new SQLiteConnection(SqliteLoadHepler.GetDatabasePath());
         db.CreateTable<TemplateItem>();
         db.CreateTable<CurrentTemplateItem>();
-   
+        var bundle = new TemplateItem() { Id = Guid.NewGuid(), Name = "Scriban Demo", 
+            Template= """
+            Dear {{ name }},
+
+            Your order, {{ orderId}}, is now ready to be collected.
+
+            Your order shall be delivered to {{ address }}.  If you need it delivered to another location, please contact as ASAP.
+
+            Order: {{ orderId}}
+            Total: {{ total | math.format "c" "en-US" }}
+
+            Items:
+            ------
+            {{- for item in items }}
+             * {{ item.quantity }} x {{ item.name }} - {{ item.total | math.format "c" "en-US" }}
+            {{- end }}
+
+            Thanks,
+            BuyFromUs
+            """,
+            JsonData= """
+            { "name" : "Bob Smith", "address" : "1 Smith St, Smithville", "orderId" : "123455", "total" : 23435.34, "items" : [ { "name" : "1kg carrots", "quantity" : 1, "total" : 4.99 }, { "name" : "2L Milk", "quantity" : 1, "total" : 3.5 } ] 
+            }
+            """
+        };
+        db.Insert(bundle);
+        Bundles.Add(bundle);
     }
     private ObservableCollection<TemplateItem> _bundles = new ObservableCollection<TemplateItem>();
     public ObservableCollection<TemplateItem> Bundles => _bundles;

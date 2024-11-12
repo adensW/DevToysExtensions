@@ -11,3 +11,15 @@ This extension is licensed under the GPL License - see the LICENSE file for deta
 ## Limitations
 
 Not support for DevToys CLI (for now).
+
+## Changelog
+
+- 0.0.4
+
+To ensure that data persists during plugin upgrades or uninstalls, move the SQLite storage path to "%LocalAppData%/DevToys-preview/Data/ScibanRenderer.db"
+
+The data will not be deleted when the plugin is uninstalled. If you need to delete the saved data, it must be done manually.
+
+- 0.0.3
+
+add sqlite storage.stored

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>$(NetCore)</TargetFrameworks>
 		<PackageId>Adens.DevToys.ScribanRenderer</PackageId>
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<Title>ScribanRenderer</Title>
 		<Description>ScribanRenderer Utility</Description>
 		<PackageProjectUrl>https://github.com/adensW/DevToysExtensions</PackageProjectUrl>
@@ -22,6 +22,10 @@
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
 		<None Include="..\..\doc\ScribanRenderer.md" Pack="true" PackagePath="" />
+		<!-- This makes sure to include platform-specific binaries into the NuGet package, if any-->
+		<None Include="runtimes\**" Pack="true" PackagePath="\lib\net8.0\runtimes\">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DevToys.Api" />
@@ -48,11 +52,12 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+	<!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
 	<Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
 		<ItemGroup>
-			<None Include="$(OutputPath)\net8.0\**">
+			<None Include="$(OutputPath)\**">
 				<Pack>true</Pack>
-				<PackagePath>lib\net8.0</PackagePath>
+				<PackagePath>lib</PackagePath>
 			</None>
 		</ItemGroup>
 	</Target>

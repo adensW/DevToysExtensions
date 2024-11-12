@@ -91,13 +91,13 @@ internal static class SqliteLoadHepler
     }
     internal static bool HasDatabase()
     {
-        string appFolder = Path.GetDirectoryName(typeof(SqliteLoadHepler).Assembly.Location)!;
-        var pluginFolder = Path.Combine(appFolder, "data");
-        if (!Directory.Exists(pluginFolder))
+
+        string appDataFolder = DevToysConstants.AppDataFolder;
+        if (!Directory.Exists(appDataFolder))
         {
-           return false;
+            return false;
         }
-        var databasePath = Path.Combine(pluginFolder, "ScribanRenderer.db");
+        var databasePath = Path.Combine(appDataFolder, "ScribanRenderer.db");
         if (!File.Exists(databasePath))
         {
             return false;
@@ -106,16 +106,16 @@ internal static class SqliteLoadHepler
     }
     internal static string GetDatabasePath()
     {
-        string appFolder = Path.GetDirectoryName(typeof(SqliteLoadHepler).Assembly.Location)!;
-        var pluginFolder = Path.Combine(appFolder, "data");
-        if (!Directory.Exists(pluginFolder))
+
+        string appDataFolder = DevToysConstants.AppDataFolder;
+        if (!Directory.Exists(appDataFolder))
         {
-            Directory.CreateDirectory(pluginFolder);
+            Directory.CreateDirectory(appDataFolder);
         }
-        var databasePath = Path.Combine(pluginFolder, "ScribanRenderer.db");
+        var databasePath = Path.Combine(appDataFolder, "ScribanRenderer.db");
         if (!File.Exists(databasePath))
         {
-            using var s= File.Create(databasePath);
+            using var s = File.Create(databasePath);
             s.Flush();
             s.Close();
         }
