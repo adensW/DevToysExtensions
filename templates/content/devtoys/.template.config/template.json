@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Adens",
+  "classifications": [
+    "devtoys",
+    "Console"
+  ],
+  "identity": "Adens.Devtoys.Template.Sln.CSharp",
+  "name": "Adens Devtoys Sln Extenions",
+  "shortName": "toys",
+  "symbols": {
+    "CompanyName": {
+      "type": "parameter",
+      "description": "The company name for the project.",
+      "datatype": "string",
+      "defaultValue": "Adens.DevToys",
+      "replaces": "CompanyName",
+      "fileRename": "CompanyName"
+    },
+    "ProjectName": {
+      "type": "derived",
+      "description": "The project name for the project.",
+      "valueSource": "name",
+      "valueTransform": "ValueAfterLastDot",
+      "replaces": "ProjectName",
+      "fileRename": "ProjectName"
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)",
+      "replacement": ""
+    }
+  }
+}

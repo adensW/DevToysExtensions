@@ -7,7 +7,7 @@
   ],
   "identity": "Adens.Devtoys.Template.CSharp",
   "name": "Adens Devtoys Extenions",
-  "shortName": "atoys",
+  "shortName": "toy",
   "symbols": {
     "CompanyName": {
       "type": "parameter",
@@ -16,7 +16,6 @@
       "defaultValue": "Adens.DevToys",
       "replaces": "CompanyName",
       "fileRename": "CompanyName"
-
     },
     "ProjectName": {
       "type": "derived",
@@ -37,20 +36,32 @@
   "postActions": [
     {
       "description": "Add projects to solution",
-      "manualInstructions": [ { "text": "Add generated project to solution manually." } ],
+      "manualInstructions": [
+        {
+          "text": "Add generated project to solution manually."
+        }
+      ],
       "args": {
         "solutionFolder": "src",
-        "projectFiles": [ "CompanyName.ProjectName.csproj" ]
+        "projectFiles": [
+          "CompanyName.ProjectName.csproj"
+        ]
       },
       "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
       "continueOnError": true
     },
     {
       "description": "Add projects to solution",
-      "manualInstructions": [ { "text": "Add generated project to solution manually." } ],
+      "manualInstructions": [
+        {
+          "text": "Add generated project to solution manually."
+        }
+      ],
       "args": {
         "solutionFolder": "test",
-        "projectFiles": [ "CompanyName.ProjectName.Tests.csproj" ]
+        "projectFiles": [
+          "CompanyName.ProjectName.Tests.csproj"
+        ]
       },
       "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
       "continueOnError": true
